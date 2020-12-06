@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  server:
+    image: tests
+    hostname: '{{.Task.Name}}'
+    networks:
+    - tests
+    deploy:
+     replicas: 3
+    environment:
+     - MY_HOSTNAME='{{.Task.Name}}'
+     
+networks:
+    tests:
+        driver: overlay
