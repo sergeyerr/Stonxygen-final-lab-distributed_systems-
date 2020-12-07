@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+service StocksLoader {
+    rpc get_stocks(Get_stocks_request) returns (stream Stock) {}
+    rpc get_stocks_history(Stock_Codes) returns (stream Stock) {}
+}
+
+message Stock {
+    string name = 1;
+    string code = 2;
+    repeated double price = 3;
+}
+
+message Stock_Codes {
+    string codes = 1;
+}
+
+message Get_stocks_request {}
