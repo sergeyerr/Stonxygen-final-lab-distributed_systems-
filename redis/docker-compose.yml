@@ -12,8 +12,8 @@ services:
       - REDIS_PASSWORD=redis
     networks:
       - redis_network
-    #ports:
-     #- "6379:6379"
+    ports:
+     - 6379:6379
   redis-slave:
     image: 'bitnami/redis:latest'
     environment:
@@ -38,7 +38,3 @@ services:
       - redis_network
     deploy:
       replicas: 3
-  app:
-    image: test_redis
-    networks:
-      - redis_network

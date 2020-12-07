@@ -1,0 +1,12 @@
+version: "3"
+services:
+  example_app:
+    image: rjomba_keker
+    hostname: '{{.Task.Name}}' # Это пример для Даниила, когда нужно отправлять своё имя. В остальных случаях ЭТО НЕ ПИСАТЬ
+    networks:
+    - postgres_network # подключайте только те сервисы, что нужно
+    - redis_network
+    - rabbit_network
+    environment:
+     - MY_HOSTNAME='{{.Task.Name}}' # Всё тот же пример
+     
