@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from StatsCalculator import Finance_API_pb2 as Finance__API__pb2
+import Finance_API_pb2 as Finance__API__pb2
 
 
 class StocksLoaderStub(object):

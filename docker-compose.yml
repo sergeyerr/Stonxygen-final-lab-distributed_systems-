@@ -19,19 +19,33 @@ volumes:
     
 services:
   finance_api:
-    image: test
+    image: sergeyer/trrp_finance_api:latest
     networks:
      - services_network
     environment:
      - USER_SERVICE=user_service
+     
   price_updater:
-    image:shrek
+    image: sergeyer/trrp_price_updater:latest
     networks:
      - services_network
      - redis_network
     environment:
      - UPDATE_FREQUENCY=60
      - FINANCE_API=finance_api
+  
+  stats_calculator:
+    image: sergeyer/trrp_stats_calculator:latest
+    networks:
+     - services_network
+     - redis_network
+     - rabbit_network
+    environment:
+     - STAT_EXPIRATION_TIME=60
+     - USER_SERVICE=user_service
+     - FINANCE_API=finance_api
+     - RABBIT_MQ_HOST=rabbit
+     
   auth:
     build: .
     image: sergeyer/trrp_auth:latest

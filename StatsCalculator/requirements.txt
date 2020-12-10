@@ -1,0 +1,4 @@
+grpcio~=1.19.0
+protobuf
+pika
+redis
