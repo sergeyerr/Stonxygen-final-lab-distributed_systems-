@@ -7,14 +7,17 @@ import redis
 import socket
 from StatsCalculator import user_service_pb2
 from StatsCalculator import user_service_pb2_grpc
+from os import getenv
 
-
-stat_expiration_time = 30
+stat_expiration_time = getenv('STAT_EXPIRATION_TIME', '30')
+user_service_host = getenv('USER_SERVICE', 'localhost')
+finance_api_host = getenv('FINANCE_API', 'localhost')
+rabbitmq_host = getenv('RABBIT_MQ_HOST', 'localhost')
 
 
 def get_user_stocks(user):
     ans = ''
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel(user_service_host + ':50051') as channel:
         stub = user_service_pb2_grpc.user_serviceStub(channel)
         for code in stub.GetStocks(user_service_pb2.GetUserStocksRequest(user=user)).codes:
             ans += code + ' '
@@ -28,7 +31,7 @@ def get_user_stocks(user):
 # returns dictionary {'code1': [prices], ..}
 def get_prices_history(stocks):
     prices_history = {}
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel(finance_api_host + ':50051') as channel:
         stub = Finance_API_pb2_grpc.StocksLoaderStub(channel)
         for stock_hist in stub.get_stocks_history(Finance_API_pb2.Stock_Codes(codes=stocks)):
             prices_history[stock_hist.code] = stock_hist.price
@@ -65,7 +68,7 @@ def calc_stat_for_stock(stocks_with_prices, stock_code):
 
 def save_to_redis(user, stock_code, the_stat):
     redis_conn = redis.Redis()
-    redis_conn.set(user + "_" + stock_code, the_stat, ex=stat_expiration_time)
+    redis_conn.set(user + "_" + stock_code, the_stat, ex=int(stat_expiration_time))
 
 
 def respond_by_socket(address):
@@ -94,7 +97,7 @@ def callback(ch, method, properties, body):
 
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
     channel = connection.channel()
 
     channel.queue_declare(queue='hello')

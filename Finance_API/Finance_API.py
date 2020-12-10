@@ -7,6 +7,10 @@ from Finance_API import Finance_API_pb2_grpc
 
 from Finance_API import user_service_pb2
 from Finance_API import user_service_pb2_grpc
+from os import getenv
+
+
+user_service_host = getenv('USER_SERVICE', 'localhost')
 
 
 # stock_names = [('Apple Inc.', 'AAPL'),
@@ -45,7 +49,7 @@ class StocksLoaderServicer(Finance_API_pb2_grpc.StocksLoaderServicer):
 
 
 def serve():
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel(user_service_host + ':50051') as channel:
         stub = user_service_pb2_grpc.user_serviceStub(channel)
         for code in stub.GetAllStocks(user_service_pb2.GetAllStocksRequest()).codes:
             stock_names.append(('', code))
