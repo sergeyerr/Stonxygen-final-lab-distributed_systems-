@@ -19,29 +19,29 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12user_service.proto\x12\x0buserService\"9\n\x15stock_to_user_request\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x12\n\nstock_code\x18\x02 \x01(\t\"\'\n\x17get_user_stocks_request\x12\x0c\n\x04user\x18\x01 \x01(\t\"\x18\n\x16get_all_stocks_request\"\x1c\n\tok_answer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1d\n\x0cstock_answer\x12\r\n\x05\x63odes\x18\x01 \x03(\t2\xd5\x02\n\x0cuser_service\x12N\n\x0e\x41\x64\x64StockToUser\x12\".userService.stock_to_user_request\x1a\x16.userService.ok_answer\"\x00\x12S\n\x13RemoveStockFromUser\x12\".userService.stock_to_user_request\x1a\x16.userService.ok_answer\"\x00\x12N\n\tGetStocks\x12$.userService.get_user_stocks_request\x1a\x19.userService.stock_answer\"\x00\x12P\n\x0cGetAllStocks\x12#.userService.get_all_stocks_request\x1a\x19.userService.stock_answer\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x12user_service.proto\x12\x0buserService\"6\n\x12StockToUserRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x12\n\nstock_code\x18\x02 \x01(\t\"$\n\x14GetUserStocksRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\"\x15\n\x13GetAllStocksRequest\"\x1b\n\x08OkAnswer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1c\n\x0bStockAnswer\x12\r\n\x05\x63odes\x18\x01 \x03(\t2\xc5\x02\n\x0cuser_service\x12J\n\x0e\x41\x64\x64StockToUser\x12\x1f.userService.StockToUserRequest\x1a\x15.userService.OkAnswer\"\x00\x12O\n\x13RemoveStockFromUser\x12\x1f.userService.StockToUserRequest\x1a\x15.userService.OkAnswer\"\x00\x12J\n\tGetStocks\x12!.userService.GetUserStocksRequest\x1a\x18.userService.StockAnswer\"\x00\x12L\n\x0cGetAllStocks\x12 .userService.GetAllStocksRequest\x1a\x18.userService.StockAnswer\"\x00\x62\x06proto3'
 )
 
 
 
 
-_STOCK_TO_USER_REQUEST = _descriptor.Descriptor(
-  name='stock_to_user_request',
-  full_name='userService.stock_to_user_request',
+_STOCKTOUSERREQUEST = _descriptor.Descriptor(
+  name='StockToUserRequest',
+  full_name='userService.StockToUserRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='user', full_name='userService.stock_to_user_request.user', index=0,
+      name='user', full_name='userService.StockToUserRequest.user', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='stock_code', full_name='userService.stock_to_user_request.stock_code', index=1,
+      name='stock_code', full_name='userService.StockToUserRequest.stock_code', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -60,20 +60,20 @@ _STOCK_TO_USER_REQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=35,
-  serialized_end=92,
+  serialized_end=89,
 )
 
 
-_GET_USER_STOCKS_REQUEST = _descriptor.Descriptor(
-  name='get_user_stocks_request',
-  full_name='userService.get_user_stocks_request',
+_GETUSERSTOCKSREQUEST = _descriptor.Descriptor(
+  name='GetUserStocksRequest',
+  full_name='userService.GetUserStocksRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='user', full_name='userService.get_user_stocks_request.user', index=0,
+      name='user', full_name='userService.GetUserStocksRequest.user', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -91,14 +91,14 @@ _GET_USER_STOCKS_REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=94,
-  serialized_end=133,
+  serialized_start=91,
+  serialized_end=127,
 )
 
 
-_GET_ALL_STOCKS_REQUEST = _descriptor.Descriptor(
-  name='get_all_stocks_request',
-  full_name='userService.get_all_stocks_request',
+_GETALLSTOCKSREQUEST = _descriptor.Descriptor(
+  name='GetAllStocksRequest',
+  full_name='userService.GetAllStocksRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -116,21 +116,21 @@ _GET_ALL_STOCKS_REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=135,
-  serialized_end=159,
+  serialized_start=129,
+  serialized_end=150,
 )
 
 
-_OK_ANSWER = _descriptor.Descriptor(
-  name='ok_answer',
-  full_name='userService.ok_answer',
+_OKANSWER = _descriptor.Descriptor(
+  name='OkAnswer',
+  full_name='userService.OkAnswer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ok_code', full_name='userService.ok_answer.ok_code', index=0,
+      name='ok_code', full_name='userService.OkAnswer.ok_code', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -148,21 +148,21 @@ _OK_ANSWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=161,
-  serialized_end=189,
+  serialized_start=152,
+  serialized_end=179,
 )
 
 
-_STOCK_ANSWER = _descriptor.Descriptor(
-  name='stock_answer',
-  full_name='userService.stock_answer',
+_STOCKANSWER = _descriptor.Descriptor(
+  name='StockAnswer',
+  full_name='userService.StockAnswer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='codes', full_name='userService.stock_answer.codes', index=0,
+      name='codes', full_name='userService.StockAnswer.codes', index=0,
       number=1, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -180,51 +180,51 @@ _STOCK_ANSWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=191,
-  serialized_end=220,
+  serialized_start=181,
+  serialized_end=209,
 )
 
-DESCRIPTOR.message_types_by_name['stock_to_user_request'] = _STOCK_TO_USER_REQUEST
-DESCRIPTOR.message_types_by_name['get_user_stocks_request'] = _GET_USER_STOCKS_REQUEST
-DESCRIPTOR.message_types_by_name['get_all_stocks_request'] = _GET_ALL_STOCKS_REQUEST
-DESCRIPTOR.message_types_by_name['ok_answer'] = _OK_ANSWER
-DESCRIPTOR.message_types_by_name['stock_answer'] = _STOCK_ANSWER
+DESCRIPTOR.message_types_by_name['StockToUserRequest'] = _STOCKTOUSERREQUEST
+DESCRIPTOR.message_types_by_name['GetUserStocksRequest'] = _GETUSERSTOCKSREQUEST
+DESCRIPTOR.message_types_by_name['GetAllStocksRequest'] = _GETALLSTOCKSREQUEST
+DESCRIPTOR.message_types_by_name['OkAnswer'] = _OKANSWER
+DESCRIPTOR.message_types_by_name['StockAnswer'] = _STOCKANSWER
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-stock_to_user_request = _reflection.GeneratedProtocolMessageType('stock_to_user_request', (_message.Message,), {
-  'DESCRIPTOR' : _STOCK_TO_USER_REQUEST,
+StockToUserRequest = _reflection.GeneratedProtocolMessageType('StockToUserRequest', (_message.Message,), {
+  'DESCRIPTOR' : _STOCKTOUSERREQUEST,
   '__module__' : 'user_service_pb2'
-  # @@protoc_insertion_point(class_scope:userService.stock_to_user_request)
+  # @@protoc_insertion_point(class_scope:userService.StockToUserRequest)
   })
-_sym_db.RegisterMessage(stock_to_user_request)
+_sym_db.RegisterMessage(StockToUserRequest)
 
-get_user_stocks_request = _reflection.GeneratedProtocolMessageType('get_user_stocks_request', (_message.Message,), {
-  'DESCRIPTOR' : _GET_USER_STOCKS_REQUEST,
+GetUserStocksRequest = _reflection.GeneratedProtocolMessageType('GetUserStocksRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETUSERSTOCKSREQUEST,
   '__module__' : 'user_service_pb2'
-  # @@protoc_insertion_point(class_scope:userService.get_user_stocks_request)
+  # @@protoc_insertion_point(class_scope:userService.GetUserStocksRequest)
   })
-_sym_db.RegisterMessage(get_user_stocks_request)
+_sym_db.RegisterMessage(GetUserStocksRequest)
 
-get_all_stocks_request = _reflection.GeneratedProtocolMessageType('get_all_stocks_request', (_message.Message,), {
-  'DESCRIPTOR' : _GET_ALL_STOCKS_REQUEST,
+GetAllStocksRequest = _reflection.GeneratedProtocolMessageType('GetAllStocksRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETALLSTOCKSREQUEST,
   '__module__' : 'user_service_pb2'
-  # @@protoc_insertion_point(class_scope:userService.get_all_stocks_request)
+  # @@protoc_insertion_point(class_scope:userService.GetAllStocksRequest)
   })
-_sym_db.RegisterMessage(get_all_stocks_request)
+_sym_db.RegisterMessage(GetAllStocksRequest)
 
-ok_answer = _reflection.GeneratedProtocolMessageType('ok_answer', (_message.Message,), {
-  'DESCRIPTOR' : _OK_ANSWER,
+OkAnswer = _reflection.GeneratedProtocolMessageType('OkAnswer', (_message.Message,), {
+  'DESCRIPTOR' : _OKANSWER,
   '__module__' : 'user_service_pb2'
-  # @@protoc_insertion_point(class_scope:userService.ok_answer)
+  # @@protoc_insertion_point(class_scope:userService.OkAnswer)
   })
-_sym_db.RegisterMessage(ok_answer)
+_sym_db.RegisterMessage(OkAnswer)
 
-stock_answer = _reflection.GeneratedProtocolMessageType('stock_answer', (_message.Message,), {
-  'DESCRIPTOR' : _STOCK_ANSWER,
+StockAnswer = _reflection.GeneratedProtocolMessageType('StockAnswer', (_message.Message,), {
+  'DESCRIPTOR' : _STOCKANSWER,
   '__module__' : 'user_service_pb2'
-  # @@protoc_insertion_point(class_scope:userService.stock_answer)
+  # @@protoc_insertion_point(class_scope:userService.StockAnswer)
   })
-_sym_db.RegisterMessage(stock_answer)
+_sym_db.RegisterMessage(StockAnswer)
 
 
 
@@ -235,16 +235,16 @@ _USER_SERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=223,
-  serialized_end=564,
+  serialized_start=212,
+  serialized_end=537,
   methods=[
   _descriptor.MethodDescriptor(
     name='AddStockToUser',
     full_name='userService.user_service.AddStockToUser',
     index=0,
     containing_service=None,
-    input_type=_STOCK_TO_USER_REQUEST,
-    output_type=_OK_ANSWER,
+    input_type=_STOCKTOUSERREQUEST,
+    output_type=_OKANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -253,8 +253,8 @@ _USER_SERVICE = _descriptor.ServiceDescriptor(
     full_name='userService.user_service.RemoveStockFromUser',
     index=1,
     containing_service=None,
-    input_type=_STOCK_TO_USER_REQUEST,
-    output_type=_OK_ANSWER,
+    input_type=_STOCKTOUSERREQUEST,
+    output_type=_OKANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -263,8 +263,8 @@ _USER_SERVICE = _descriptor.ServiceDescriptor(
     full_name='userService.user_service.GetStocks',
     index=2,
     containing_service=None,
-    input_type=_GET_USER_STOCKS_REQUEST,
-    output_type=_STOCK_ANSWER,
+    input_type=_GETUSERSTOCKSREQUEST,
+    output_type=_STOCKANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -273,8 +273,8 @@ _USER_SERVICE = _descriptor.ServiceDescriptor(
     full_name='userService.user_service.GetAllStocks',
     index=3,
     containing_service=None,
-    input_type=_GET_ALL_STOCKS_REQUEST,
-    output_type=_STOCK_ANSWER,
+    input_type=_GETALLSTOCKSREQUEST,
+    output_type=_STOCKANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

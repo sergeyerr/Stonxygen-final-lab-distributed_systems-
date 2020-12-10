@@ -19,29 +19,29 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\nauth.proto\x12\x0b\x61uthService\"7\n\x15user_password_request\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"$\n\x13\x63heck_token_request\x12\r\n\x05token\x18\x01 \x01(\t\"\x1c\n\tok_answer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1d\n\x0ctoken_answer\x12\r\n\x05token\x18\x01 \x01(\t2\xeb\x01\n\x04\x61uth\x12K\n\x08GetToken\x12\".authService.user_password_request\x1a\x19.authService.token_answer\"\x00\x12H\n\nCheckToken\x12 .authService.check_token_request\x1a\x16.authService.ok_answer\"\x00\x12L\n\x0cRegisterUser\x12\".authService.user_password_request\x1a\x16.authService.ok_answer\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\nauth.proto\x12\x0b\x61uthService\"5\n\x13UserPasswordRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\"\n\x11\x43heckTokenRequest\x12\r\n\x05token\x18\x01 \x01(\t\"\x1b\n\x08OkAnswer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1c\n\x0bTokenAnswer\x12\r\n\x05token\x18\x01 \x01(\t2\xe5\x01\n\x04\x61uth\x12H\n\x08GetToken\x12 .authService.UserPasswordRequest\x1a\x18.authService.TokenAnswer\"\x00\x12\x45\n\nCheckToken\x12\x1e.authService.CheckTokenRequest\x1a\x15.authService.OkAnswer\"\x00\x12L\n\x0cRegisterUser\x12 .authService.UserPasswordRequest\x1a\x18.authService.TokenAnswer\"\x00\x62\x06proto3'
 )
 
 
 
 
-_USER_PASSWORD_REQUEST = _descriptor.Descriptor(
-  name='user_password_request',
-  full_name='authService.user_password_request',
+_USERPASSWORDREQUEST = _descriptor.Descriptor(
+  name='UserPasswordRequest',
+  full_name='authService.UserPasswordRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='user', full_name='authService.user_password_request.user', index=0,
+      name='user', full_name='authService.UserPasswordRequest.user', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='password', full_name='authService.user_password_request.password', index=1,
+      name='password', full_name='authService.UserPasswordRequest.password', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -60,20 +60,20 @@ _USER_PASSWORD_REQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=27,
-  serialized_end=82,
+  serialized_end=80,
 )
 
 
-_CHECK_TOKEN_REQUEST = _descriptor.Descriptor(
-  name='check_token_request',
-  full_name='authService.check_token_request',
+_CHECKTOKENREQUEST = _descriptor.Descriptor(
+  name='CheckTokenRequest',
+  full_name='authService.CheckTokenRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='token', full_name='authService.check_token_request.token', index=0,
+      name='token', full_name='authService.CheckTokenRequest.token', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -91,21 +91,21 @@ _CHECK_TOKEN_REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=84,
-  serialized_end=120,
+  serialized_start=82,
+  serialized_end=116,
 )
 
 
-_OK_ANSWER = _descriptor.Descriptor(
-  name='ok_answer',
-  full_name='authService.ok_answer',
+_OKANSWER = _descriptor.Descriptor(
+  name='OkAnswer',
+  full_name='authService.OkAnswer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ok_code', full_name='authService.ok_answer.ok_code', index=0,
+      name='ok_code', full_name='authService.OkAnswer.ok_code', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -123,21 +123,21 @@ _OK_ANSWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=122,
-  serialized_end=150,
+  serialized_start=118,
+  serialized_end=145,
 )
 
 
-_TOKEN_ANSWER = _descriptor.Descriptor(
-  name='token_answer',
-  full_name='authService.token_answer',
+_TOKENANSWER = _descriptor.Descriptor(
+  name='TokenAnswer',
+  full_name='authService.TokenAnswer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='token', full_name='authService.token_answer.token', index=0,
+      name='token', full_name='authService.TokenAnswer.token', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -155,43 +155,43 @@ _TOKEN_ANSWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=152,
-  serialized_end=181,
+  serialized_start=147,
+  serialized_end=175,
 )
 
-DESCRIPTOR.message_types_by_name['user_password_request'] = _USER_PASSWORD_REQUEST
-DESCRIPTOR.message_types_by_name['check_token_request'] = _CHECK_TOKEN_REQUEST
-DESCRIPTOR.message_types_by_name['ok_answer'] = _OK_ANSWER
-DESCRIPTOR.message_types_by_name['token_answer'] = _TOKEN_ANSWER
+DESCRIPTOR.message_types_by_name['UserPasswordRequest'] = _USERPASSWORDREQUEST
+DESCRIPTOR.message_types_by_name['CheckTokenRequest'] = _CHECKTOKENREQUEST
+DESCRIPTOR.message_types_by_name['OkAnswer'] = _OKANSWER
+DESCRIPTOR.message_types_by_name['TokenAnswer'] = _TOKENANSWER
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-user_password_request = _reflection.GeneratedProtocolMessageType('user_password_request', (_message.Message,), {
-  'DESCRIPTOR' : _USER_PASSWORD_REQUEST,
+UserPasswordRequest = _reflection.GeneratedProtocolMessageType('UserPasswordRequest', (_message.Message,), {
+  'DESCRIPTOR' : _USERPASSWORDREQUEST,
   '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:authService.user_password_request)
+  # @@protoc_insertion_point(class_scope:authService.UserPasswordRequest)
   })
-_sym_db.RegisterMessage(user_password_request)
+_sym_db.RegisterMessage(UserPasswordRequest)
 
-check_token_request = _reflection.GeneratedProtocolMessageType('check_token_request', (_message.Message,), {
-  'DESCRIPTOR' : _CHECK_TOKEN_REQUEST,
+CheckTokenRequest = _reflection.GeneratedProtocolMessageType('CheckTokenRequest', (_message.Message,), {
+  'DESCRIPTOR' : _CHECKTOKENREQUEST,
   '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:authService.check_token_request)
+  # @@protoc_insertion_point(class_scope:authService.CheckTokenRequest)
   })
-_sym_db.RegisterMessage(check_token_request)
+_sym_db.RegisterMessage(CheckTokenRequest)
 
-ok_answer = _reflection.GeneratedProtocolMessageType('ok_answer', (_message.Message,), {
-  'DESCRIPTOR' : _OK_ANSWER,
+OkAnswer = _reflection.GeneratedProtocolMessageType('OkAnswer', (_message.Message,), {
+  'DESCRIPTOR' : _OKANSWER,
   '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:authService.ok_answer)
+  # @@protoc_insertion_point(class_scope:authService.OkAnswer)
   })
-_sym_db.RegisterMessage(ok_answer)
+_sym_db.RegisterMessage(OkAnswer)
 
-token_answer = _reflection.GeneratedProtocolMessageType('token_answer', (_message.Message,), {
-  'DESCRIPTOR' : _TOKEN_ANSWER,
+TokenAnswer = _reflection.GeneratedProtocolMessageType('TokenAnswer', (_message.Message,), {
+  'DESCRIPTOR' : _TOKENANSWER,
   '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:authService.token_answer)
+  # @@protoc_insertion_point(class_scope:authService.TokenAnswer)
   })
-_sym_db.RegisterMessage(token_answer)
+_sym_db.RegisterMessage(TokenAnswer)
 
 
 
@@ -202,16 +202,16 @@ _AUTH = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=184,
-  serialized_end=419,
+  serialized_start=178,
+  serialized_end=407,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetToken',
     full_name='authService.auth.GetToken',
     index=0,
     containing_service=None,
-    input_type=_USER_PASSWORD_REQUEST,
-    output_type=_TOKEN_ANSWER,
+    input_type=_USERPASSWORDREQUEST,
+    output_type=_TOKENANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -220,8 +220,8 @@ _AUTH = _descriptor.ServiceDescriptor(
     full_name='authService.auth.CheckToken',
     index=1,
     containing_service=None,
-    input_type=_CHECK_TOKEN_REQUEST,
-    output_type=_OK_ANSWER,
+    input_type=_CHECKTOKENREQUEST,
+    output_type=_OKANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -230,8 +230,8 @@ _AUTH = _descriptor.ServiceDescriptor(
     full_name='authService.auth.RegisterUser',
     index=2,
     containing_service=None,
-    input_type=_USER_PASSWORD_REQUEST,
-    output_type=_OK_ANSWER,
+    input_type=_USERPASSWORDREQUEST,
+    output_type=_TOKENANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

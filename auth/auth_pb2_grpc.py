@@ -16,18 +16,18 @@ class authStub(object):
         """
         self.GetToken = channel.unary_unary(
                 '/authService.auth/GetToken',
-                request_serializer=auth__pb2.user_password_request.SerializeToString,
-                response_deserializer=auth__pb2.token_answer.FromString,
+                request_serializer=auth__pb2.UserPasswordRequest.SerializeToString,
+                response_deserializer=auth__pb2.TokenAnswer.FromString,
                 )
         self.CheckToken = channel.unary_unary(
                 '/authService.auth/CheckToken',
-                request_serializer=auth__pb2.check_token_request.SerializeToString,
-                response_deserializer=auth__pb2.ok_answer.FromString,
+                request_serializer=auth__pb2.CheckTokenRequest.SerializeToString,
+                response_deserializer=auth__pb2.OkAnswer.FromString,
                 )
         self.RegisterUser = channel.unary_unary(
                 '/authService.auth/RegisterUser',
-                request_serializer=auth__pb2.user_password_request.SerializeToString,
-                response_deserializer=auth__pb2.ok_answer.FromString,
+                request_serializer=auth__pb2.UserPasswordRequest.SerializeToString,
+                response_deserializer=auth__pb2.TokenAnswer.FromString,
                 )
 
 
@@ -57,18 +57,18 @@ def add_authServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetToken': grpc.unary_unary_rpc_method_handler(
                     servicer.GetToken,
-                    request_deserializer=auth__pb2.user_password_request.FromString,
-                    response_serializer=auth__pb2.token_answer.SerializeToString,
+                    request_deserializer=auth__pb2.UserPasswordRequest.FromString,
+                    response_serializer=auth__pb2.TokenAnswer.SerializeToString,
             ),
             'CheckToken': grpc.unary_unary_rpc_method_handler(
                     servicer.CheckToken,
-                    request_deserializer=auth__pb2.check_token_request.FromString,
-                    response_serializer=auth__pb2.ok_answer.SerializeToString,
+                    request_deserializer=auth__pb2.CheckTokenRequest.FromString,
+                    response_serializer=auth__pb2.OkAnswer.SerializeToString,
             ),
             'RegisterUser': grpc.unary_unary_rpc_method_handler(
                     servicer.RegisterUser,
-                    request_deserializer=auth__pb2.user_password_request.FromString,
-                    response_serializer=auth__pb2.ok_answer.SerializeToString,
+                    request_deserializer=auth__pb2.UserPasswordRequest.FromString,
+                    response_serializer=auth__pb2.TokenAnswer.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -92,8 +92,8 @@ class auth(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/authService.auth/GetToken',
-            auth__pb2.user_password_request.SerializeToString,
-            auth__pb2.token_answer.FromString,
+            auth__pb2.UserPasswordRequest.SerializeToString,
+            auth__pb2.TokenAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -109,8 +109,8 @@ class auth(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/authService.auth/CheckToken',
-            auth__pb2.check_token_request.SerializeToString,
-            auth__pb2.ok_answer.FromString,
+            auth__pb2.CheckTokenRequest.SerializeToString,
+            auth__pb2.OkAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -126,7 +126,7 @@ class auth(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/authService.auth/RegisterUser',
-            auth__pb2.user_password_request.SerializeToString,
-            auth__pb2.ok_answer.FromString,
+            auth__pb2.UserPasswordRequest.SerializeToString,
+            auth__pb2.TokenAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
