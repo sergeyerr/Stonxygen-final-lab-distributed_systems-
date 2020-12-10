@@ -83,7 +83,7 @@ class UserServicer(user_service_pb2_grpc.user_serviceServicer):
     def RemoveStockFromUser(self, request, context):
         stock = request.stock_code.upper()
         user = request.user
-        self.cursor.execute(f"DELETE FROM user_stock WHERE nick='{user} AND code='{stock}'")
+        self.cursor.execute(f"DELETE FROM user_stock WHERE nick='{user}' AND code='{stock}'")
         return user_service_pb2.OkAnswer(ok_code=1)
 
     def GetStocks(self, request, context):

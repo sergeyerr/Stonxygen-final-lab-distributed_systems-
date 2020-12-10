@@ -5,6 +5,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from concurrent import futures
 from os import getenv
+import time
 
 import auth_pb2
 import auth_pb2_grpc
@@ -58,7 +59,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
             logging.info(f'user {user} already exist')
             context.set_details(f'user {user} already exist')
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-            return auth_pb2.token_answer()
+            return auth_pb2.TokenAnswer()
         token = secrets.token_hex(64)
         self.cursor.execute(f"INSERT INTO users VALUES ('{user}', '{passwd}', '{token}', Now())")
         logging.info(f'registered {user}')
@@ -70,7 +71,7 @@ def serve():
     auth_pb2_grpc.add_authServicer_to_server(Auth_Servicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    server.wait_for_termination()
+   # server.wait_for_termination()
     try:
         while True:
             time.sleep(100500)
