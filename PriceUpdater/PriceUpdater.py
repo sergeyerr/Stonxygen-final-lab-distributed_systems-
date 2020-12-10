@@ -1,14 +1,21 @@
 import grpc
-from PriceUpdater import Finance_API_pb2_grpc
-from PriceUpdater import Finance_API_pb2
+import Finance_API_pb2_grpc
+import Finance_API_pb2
 import time
 import redis
 from os import getenv
-
-redis_conn = redis.Redis()
+from redis.sentinel import Sentinel
 
 update_frequency = getenv('UPDATE_FREQUENCY', '20')
 finance_api_host = getenv('FINANCE_API', 'localhost')
+
+redis_conn = redis.Redis()
+
+if finance_api_host == 'localhost':
+    redis_conn = redis.Redis()
+else:
+    sentinel = Sentinel([('redis-sentinel', '26379')], socket_timeout=0.1)
+    redis_conn = sentinel.master_for('mymaster', socket_timeout=0.1, password='redis')
 
 
 def update_stocks(stub):

@@ -18,9 +18,23 @@ volumes:
     driver: local
     
 services:
+  finance_api:
+    image: test
+    networks:
+     - services_network
+    environment:
+     - USER_SERVICE=user_service
+  price_updater:
+    image:shrek
+    networks:
+     - services_network
+     - redis_network
+    environment:
+     - UPDATE_FREQUENCY=60
+     - FINANCE_API=finance_api
   auth:
     build: .
-    image: sergeyer/stock_auth
+    image: sergeyer/trrp_auth:latest
     networks:
     - postgres_network # подключайте только те сервисы, что нужно
     - services_network
@@ -31,7 +45,7 @@ services:
   
   user_service:
     build: .
-    image: sergeyer/user_service
+    image: sergeyer/trrp_user_service:latest
     networks:
     - postgres_network # подключайте только те сервисы, что нужно
     - services_network
@@ -119,6 +133,72 @@ services:
             RABBITMQ_DEFAULT_PASS: rabbit
         networks:
          - rabbit_network
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=redis
+    networks:
+      - redis_network
+    ports:
+     - 6379:6379
+  redis-slave:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PASSWORD=redis
+      - REDIS_PASSWORD=redis
+    depends_on:
+      - redis
+    deploy:
+      replicas: 3
+    networks:
+      - redis_network
+  redis-sentinel:
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=redis
+    depends_on:
+      - redis
+      - redis-slave
+    networks:
+      - redis_network
+    deploy:
+      replicas: 3
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=redis
+    networks:
+      - redis_network
+    ports:
+     - 6379:6379
+  redis-slave:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PASSWORD=redis
+      - REDIS_PASSWORD=redis
+    depends_on:
+      - redis
+    deploy:
+      replicas: 3
+    networks:
+      - redis_network
+  redis-sentinel:
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=redis
+    depends_on:
+      - redis
+      - redis-slave
+    networks:
+      - redis_network
+    deploy:
+      replicas: 3
   
   
   
