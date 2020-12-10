@@ -4,6 +4,7 @@ import grpc
 import Finance_API_pb2
 import Finance_API_pb2_grpc
 import redis
+import socket
 
 
 stat_expiration_time = 30
@@ -62,7 +63,11 @@ def save_to_redis(user, stock_code, the_stat):
 
 
 def respond_by_socket(address):
-    pass
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect(('127.0.0.1', 7777))  # use address variable!
+        s.sendall(b'Stat calculated and saved')
+        data = s.recv(1024)
+    print('Received', repr(data))
 
 
 def callback(ch, method, properties, body):
@@ -76,10 +81,10 @@ def callback(ch, method, properties, body):
     stocks_with_prices = get_prices_history(stocks)
 
     the_stat = calc_stat_for_stock(stocks_with_prices, stock_code)
-    #print(the_stat)
+    print(the_stat)
     save_to_redis(user, stock_code, the_stat)
 
-    #respond_by_socket(address)
+    respond_by_socket(address)
 
 
 def main():
