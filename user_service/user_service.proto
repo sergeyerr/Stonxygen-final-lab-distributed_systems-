@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package userService;
 
@@ -12,19 +12,19 @@ service user_service {
 
 
 message stock_to_user_request {
-  required string user = 1;
-  required string stock_code = 2;
+  string user = 1;
+  string stock_code = 2;
 }
 
 message get_user_stocks_request {
-  required string user = 1;
+  string user = 1;
 }
 
 message get_all_stocks_request {
 }
 
 message ok_answer {
-  required string ok_string = 1;
+  int32 ok_code = 1;
 }
 
 message stock_answer {
