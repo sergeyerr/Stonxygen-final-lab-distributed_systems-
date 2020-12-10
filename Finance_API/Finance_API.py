@@ -52,7 +52,7 @@ def serve():
     with grpc.insecure_channel(user_service_host + ':50051') as channel:
         stub = user_service_pb2_grpc.user_serviceStub(channel)
         for code in stub.GetAllStocks(user_service_pb2.GetAllStocksRequest()).codes:
-            stock_names.append(('', code))
+            stock_names.append(['', code])
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     Finance_API_pb2_grpc.add_StocksLoaderServicer_to_server(
