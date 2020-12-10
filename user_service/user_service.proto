@@ -4,29 +4,29 @@ package userService;
 
 
 service user_service {
-  rpc AddStockToUser(stock_to_user_request) returns (ok_answer) {}
-  rpc RemoveStockFromUser(stock_to_user_request) returns (ok_answer) {}
-  rpc GetStocks(get_user_stocks_request) returns (stock_answer) {}
-  rpc GetAllStocks(get_all_stocks_request) returns (stock_answer) {}
+  rpc AddStockToUser(StockToUserRequest) returns (OkAnswer) {}
+  rpc RemoveStockFromUser(StockToUserRequest) returns (OkAnswer) {}
+  rpc GetStocks(GetUserStocksRequest) returns (StockAnswer) {}
+  rpc GetAllStocks(GetAllStocksRequest) returns (StockAnswer) {}
 }
 
 
-message stock_to_user_request {
+message StockToUserRequest {
   string user = 1;
   string stock_code = 2;
 }
 
-message get_user_stocks_request {
+message GetUserStocksRequest {
   string user = 1;
 }
 
-message get_all_stocks_request {
+message GetAllStocksRequest {
 }
 
-message ok_answer {
+message OkAnswer {
   int32 ok_code = 1;
 }
 
-message stock_answer {
+message StockAnswer {
   repeated string codes = 1;
 }

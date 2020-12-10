@@ -16,23 +16,23 @@ class user_serviceStub(object):
         """
         self.AddStockToUser = channel.unary_unary(
                 '/userService.user_service/AddStockToUser',
-                request_serializer=user__service__pb2.stock_to_user_request.SerializeToString,
-                response_deserializer=user__service__pb2.ok_answer.FromString,
+                request_serializer=user__service__pb2.StockToUserRequest.SerializeToString,
+                response_deserializer=user__service__pb2.OkAnswer.FromString,
                 )
         self.RemoveStockFromUser = channel.unary_unary(
                 '/userService.user_service/RemoveStockFromUser',
-                request_serializer=user__service__pb2.stock_to_user_request.SerializeToString,
-                response_deserializer=user__service__pb2.ok_answer.FromString,
+                request_serializer=user__service__pb2.StockToUserRequest.SerializeToString,
+                response_deserializer=user__service__pb2.OkAnswer.FromString,
                 )
         self.GetStocks = channel.unary_unary(
                 '/userService.user_service/GetStocks',
-                request_serializer=user__service__pb2.get_user_stocks_request.SerializeToString,
-                response_deserializer=user__service__pb2.stock_answer.FromString,
+                request_serializer=user__service__pb2.GetUserStocksRequest.SerializeToString,
+                response_deserializer=user__service__pb2.StockAnswer.FromString,
                 )
         self.GetAllStocks = channel.unary_unary(
                 '/userService.user_service/GetAllStocks',
-                request_serializer=user__service__pb2.get_all_stocks_request.SerializeToString,
-                response_deserializer=user__service__pb2.stock_answer.FromString,
+                request_serializer=user__service__pb2.GetAllStocksRequest.SerializeToString,
+                response_deserializer=user__service__pb2.StockAnswer.FromString,
                 )
 
 
@@ -68,23 +68,23 @@ def add_user_serviceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'AddStockToUser': grpc.unary_unary_rpc_method_handler(
                     servicer.AddStockToUser,
-                    request_deserializer=user__service__pb2.stock_to_user_request.FromString,
-                    response_serializer=user__service__pb2.ok_answer.SerializeToString,
+                    request_deserializer=user__service__pb2.StockToUserRequest.FromString,
+                    response_serializer=user__service__pb2.OkAnswer.SerializeToString,
             ),
             'RemoveStockFromUser': grpc.unary_unary_rpc_method_handler(
                     servicer.RemoveStockFromUser,
-                    request_deserializer=user__service__pb2.stock_to_user_request.FromString,
-                    response_serializer=user__service__pb2.ok_answer.SerializeToString,
+                    request_deserializer=user__service__pb2.StockToUserRequest.FromString,
+                    response_serializer=user__service__pb2.OkAnswer.SerializeToString,
             ),
             'GetStocks': grpc.unary_unary_rpc_method_handler(
                     servicer.GetStocks,
-                    request_deserializer=user__service__pb2.get_user_stocks_request.FromString,
-                    response_serializer=user__service__pb2.stock_answer.SerializeToString,
+                    request_deserializer=user__service__pb2.GetUserStocksRequest.FromString,
+                    response_serializer=user__service__pb2.StockAnswer.SerializeToString,
             ),
             'GetAllStocks': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAllStocks,
-                    request_deserializer=user__service__pb2.get_all_stocks_request.FromString,
-                    response_serializer=user__service__pb2.stock_answer.SerializeToString,
+                    request_deserializer=user__service__pb2.GetAllStocksRequest.FromString,
+                    response_serializer=user__service__pb2.StockAnswer.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -108,8 +108,8 @@ class user_service(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/userService.user_service/AddStockToUser',
-            user__service__pb2.stock_to_user_request.SerializeToString,
-            user__service__pb2.ok_answer.FromString,
+            user__service__pb2.StockToUserRequest.SerializeToString,
+            user__service__pb2.OkAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -125,8 +125,8 @@ class user_service(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/userService.user_service/RemoveStockFromUser',
-            user__service__pb2.stock_to_user_request.SerializeToString,
-            user__service__pb2.ok_answer.FromString,
+            user__service__pb2.StockToUserRequest.SerializeToString,
+            user__service__pb2.OkAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -142,8 +142,8 @@ class user_service(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/userService.user_service/GetStocks',
-            user__service__pb2.get_user_stocks_request.SerializeToString,
-            user__service__pb2.stock_answer.FromString,
+            user__service__pb2.GetUserStocksRequest.SerializeToString,
+            user__service__pb2.StockAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,7 +159,7 @@ class user_service(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/userService.user_service/GetAllStocks',
-            user__service__pb2.get_all_stocks_request.SerializeToString,
-            user__service__pb2.stock_answer.FromString,
+            user__service__pb2.GetAllStocksRequest.SerializeToString,
+            user__service__pb2.StockAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
