@@ -5,8 +5,8 @@ import grpc
 import Finance_API_pb2
 import Finance_API_pb2_grpc
 
-user_service_pb2
-user_service_pb2_grpc
+import user_service_pb2
+import user_service_pb2_grpc
 from os import getenv
 
 
