@@ -1,5 +1,5 @@
 import grpc
-import secrets
+import time
 import logging
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import UniqueViolation, ForeignKeyViolation
@@ -12,7 +12,7 @@ import user_service_pb2
 
 host = getenv('POSTGRES_CONNECTION', 'localhost')
 stock_list_loc = getenv('STOCK_LIST_LOCATION',  'stocks_list.csv')
-reinit_db = bool(getenv('REINIT_DB'), False)
+reinit_db = bool(getenv('REINIT_DB', False))
 
 
 def init_db(reinit=False):
@@ -106,6 +106,11 @@ def serve():
     user_service_pb2_grpc.add_user_serviceServicer_to_server(UserServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
+    try:
+        while True:
+            time.sleep(100500)
+    except KeyboardInterrupt:
+        server.stop(0)
 
 
 if __name__ == '__main__':
