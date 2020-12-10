@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\nauth.proto\x12\x0b\x61uthService\"7\n\x15user_password_request\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"$\n\x13\x63heck_token_request\x12\r\n\x05token\x18\x01 \x01(\t\"\x1c\n\tok_answer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1d\n\x0ctoken_answer\x12\r\n\x05token\x18\x01 \x01(\t2\xeb\x01\n\x04\x61uth\x12K\n\x08GetToken\x12\".authService.user_password_request\x1a\x19.authService.token_answer\"\x00\x12H\n\nCheckToken\x12 .authService.check_token_request\x1a\x16.authService.ok_answer\"\x00\x12L\n\x0cRegisterUser\x12\".authService.user_password_request\x1a\x16.authService.ok_answer\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\nauth.proto\x12\x0b\x61uthService\"7\n\x15user_password_request\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"$\n\x13\x63heck_token_request\x12\r\n\x05token\x18\x01 \x01(\t\"\x1c\n\tok_answer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1d\n\x0ctoken_answer\x12\r\n\x05token\x18\x01 \x01(\t2\xee\x01\n\x04\x61uth\x12K\n\x08GetToken\x12\".authService.user_password_request\x1a\x19.authService.token_answer\"\x00\x12H\n\nCheckToken\x12 .authService.check_token_request\x1a\x16.authService.ok_answer\"\x00\x12O\n\x0cRegisterUser\x12\".authService.user_password_request\x1a\x19.authService.token_answer\"\x00\x62\x06proto3'
 )
 
 
@@ -203,7 +203,7 @@ _AUTH = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=184,
-  serialized_end=419,
+  serialized_end=422,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetToken',
@@ -231,7 +231,7 @@ _AUTH = _descriptor.ServiceDescriptor(
     index=2,
     containing_service=None,
     input_type=_USER_PASSWORD_REQUEST,
-    output_type=_OK_ANSWER,
+    output_type=_TOKEN_ANSWER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

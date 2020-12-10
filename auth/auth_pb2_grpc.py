@@ -27,7 +27,7 @@ class authStub(object):
         self.RegisterUser = channel.unary_unary(
                 '/authService.auth/RegisterUser',
                 request_serializer=auth__pb2.user_password_request.SerializeToString,
-                response_deserializer=auth__pb2.ok_answer.FromString,
+                response_deserializer=auth__pb2.token_answer.FromString,
                 )
 
 
@@ -68,7 +68,7 @@ def add_authServicer_to_server(servicer, server):
             'RegisterUser': grpc.unary_unary_rpc_method_handler(
                     servicer.RegisterUser,
                     request_deserializer=auth__pb2.user_password_request.FromString,
-                    response_serializer=auth__pb2.ok_answer.SerializeToString,
+                    response_serializer=auth__pb2.token_answer.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -127,6 +127,6 @@ class auth(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/authService.auth/RegisterUser',
             auth__pb2.user_password_request.SerializeToString,
-            auth__pb2.ok_answer.FromString,
+            auth__pb2.token_answer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -6,7 +6,7 @@ package authService;
 service auth {
   rpc GetToken(user_password_request) returns (token_answer) {}
   rpc CheckToken(check_token_request) returns (ok_answer) {}
-  rpc RegisterUser(user_password_request) returns (ok_answer) {}
+  rpc RegisterUser(user_password_request) returns (token_answer) {}
 }
 
 
