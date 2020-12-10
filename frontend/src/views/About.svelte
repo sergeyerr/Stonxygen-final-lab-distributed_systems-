@@ -1,0 +1,1 @@
+<div class="m-auto"><p>Licensed under the MIT license</p></div>
