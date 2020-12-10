@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.7
 WORKDIR /code
 RUN apt update -y
 RUN apt install build-essential

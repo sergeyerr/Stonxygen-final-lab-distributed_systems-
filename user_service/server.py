@@ -29,7 +29,7 @@ def init_db(reinit=False):
     cursor.close();
     con.close()
 
-    con = psycopg2.connect(f"dbname=stocks user=postgres password='postgres'");
+    con = psycopg2.connect(dbname='stocks',host=host, user='postgres', password='postgres');
     con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = con.cursor();
     logging.info('creating tables')
