@@ -4,12 +4,12 @@ import logging
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from concurrent import futures
+from os import getenv
 
 import auth_pb2
 import auth_pb2_grpc
-host = 'localhost'
-tokens_lifetime_sec = 300
-
+host = getenv('POSTGRES_CONNECTION', 'localhost')
+tokens_lifetime_sec = int(getenv('TOKEN_LIFETIME', 300))
 
 class Auth_Servicer(auth_pb2_grpc.authServicer):
     def __init__(self):
@@ -24,7 +24,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
         if self.cursor.fetchone()[0] == 0:
             context.set_details('no user with such password')
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-            return auth_pb2.token_answer()
+            return auth_pb2.TokenAnswer()
         token = secrets.token_hex(64)
         self.cursor.execute(f'''UPDATE users
             SET token = '{token}',
@@ -32,7 +32,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
             WHERE nick = '{user}'
             ''')
         logging.info(f'token refreshed for user {user}')
-        return auth_pb2.token_answer(token=token)
+        return auth_pb2.TokenAnswer(token=token)
 
     def CheckToken(self, request, context):
         token = request.token
@@ -41,14 +41,14 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
         if len(res) == 0:
             context.set_details("token doesn't exist")
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-            return auth_pb2.ok_answer()
+            return auth_pb2.OkAnswer()
         res = res[0]
         left_time = res[0]
         if left_time.seconds < tokens_lifetime_sec:
-            return auth_pb2.ok_answer(ok_code=1)
+            return auth_pb2.OkAnswer(ok_code=1)
         context.set_details("token outdated")
         context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-        return auth_pb2.ok_answer()
+        return auth_pb2.OkAnswer()
 
     def RegisterUser(self, request, context):
         passwd = hash(request.password)
@@ -62,7 +62,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
         token = secrets.token_hex(64)
         self.cursor.execute(f"INSERT INTO users VALUES ('{user}', '{passwd}', '{token}', Now())")
         logging.info(f'registered {user}')
-        return auth_pb2.token_answer(token=token)
+        return auth_pb2.TokenAnswer(token=token)
 
 
 def serve():
