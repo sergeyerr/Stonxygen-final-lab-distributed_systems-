@@ -1,0 +1,10 @@
+version: "3"
+networks:
+  postgres_network:
+    driver: overlay
+  rabbit_network:
+    driver: overlay
+  redis_network:
+    driver: overlay
+  services_network:
+    driver: overlay

@@ -1,0 +1,11 @@
+version: "3"
+services:
+  user_service:
+    build: .
+    image: sergeyer/user_service
+    networks:
+    - postgres_network # подключайте только те сервисы, что нужно
+    - services_network
+    environment:
+     - POSTGRES_CONNECTION='postgres'
+     
