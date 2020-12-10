@@ -5,17 +5,23 @@ from StatsCalculator import Finance_API_pb2
 from StatsCalculator import Finance_API_pb2_grpc
 import redis
 import socket
+from StatsCalculator import user_service_pb2
+from StatsCalculator import user_service_pb2_grpc
 
 
 stat_expiration_time = 30
 
 
 def get_user_stocks(user):
+    ans = ''
+    with grpc.insecure_channel('localhost:50051') as channel:
+        stub = user_service_pb2_grpc.user_serviceStub(channel)
+        for code in stub.GetStocks(user_service_pb2.GetUserStocksRequest(user=user)).codes:
+            ans += code + ' '
     # calling GetStocks(user) of Sergey's service
     # expecting list of stock codes ['AAPL', 'MSFT',..] or (better) string 'AAPL MSFT ..'
-
-    return 'AAPL FB CRM INTC'
-    pass
+    ans = ans[:-1]
+    return ans
 
 
 # getting prices history through gRPC using Finance_API
