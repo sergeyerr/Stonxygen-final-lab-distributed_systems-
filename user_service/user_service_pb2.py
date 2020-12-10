@@ -16,10 +16,10 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='user_service.proto',
   package='userService',
-  syntax='proto2',
+  syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12user_service.proto\x12\x0buserService\"9\n\x15stock_to_user_request\x12\x0c\n\x04user\x18\x01 \x02(\t\x12\x12\n\nstock_code\x18\x02 \x02(\t\"\'\n\x17get_user_stocks_request\x12\x0c\n\x04user\x18\x01 \x02(\t\"\x18\n\x16get_all_stocks_request\"\x1e\n\tok_answer\x12\x11\n\tok_string\x18\x01 \x02(\t\"\x1d\n\x0cstock_answer\x12\r\n\x05\x63odes\x18\x01 \x03(\t2\xd5\x02\n\x0cuser_service\x12N\n\x0e\x41\x64\x64StockToUser\x12\".userService.stock_to_user_request\x1a\x16.userService.ok_answer\"\x00\x12S\n\x13RemoveStockFromUser\x12\".userService.stock_to_user_request\x1a\x16.userService.ok_answer\"\x00\x12N\n\tGetStocks\x12$.userService.get_user_stocks_request\x1a\x19.userService.stock_answer\"\x00\x12P\n\x0cGetAllStocks\x12#.userService.get_all_stocks_request\x1a\x19.userService.stock_answer\"\x00'
+  serialized_pb=b'\n\x12user_service.proto\x12\x0buserService\"9\n\x15stock_to_user_request\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x12\n\nstock_code\x18\x02 \x01(\t\"\'\n\x17get_user_stocks_request\x12\x0c\n\x04user\x18\x01 \x01(\t\"\x18\n\x16get_all_stocks_request\"\x1c\n\tok_answer\x12\x0f\n\x07ok_code\x18\x01 \x01(\x05\"\x1d\n\x0cstock_answer\x12\r\n\x05\x63odes\x18\x01 \x03(\t2\xd5\x02\n\x0cuser_service\x12N\n\x0e\x41\x64\x64StockToUser\x12\".userService.stock_to_user_request\x1a\x16.userService.ok_answer\"\x00\x12S\n\x13RemoveStockFromUser\x12\".userService.stock_to_user_request\x1a\x16.userService.ok_answer\"\x00\x12N\n\tGetStocks\x12$.userService.get_user_stocks_request\x1a\x19.userService.stock_answer\"\x00\x12P\n\x0cGetAllStocks\x12#.userService.get_all_stocks_request\x1a\x19.userService.stock_answer\"\x00\x62\x06proto3'
 )
 
 
@@ -35,14 +35,14 @@ _STOCK_TO_USER_REQUEST = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='user', full_name='userService.stock_to_user_request.user', index=0,
-      number=1, type=9, cpp_type=9, label=2,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='stock_code', full_name='userService.stock_to_user_request.stock_code', index=1,
-      number=2, type=9, cpp_type=9, label=2,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -55,7 +55,7 @@ _STOCK_TO_USER_REQUEST = _descriptor.Descriptor(
   ],
   serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -74,7 +74,7 @@ _GET_USER_STOCKS_REQUEST = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='user', full_name='userService.get_user_stocks_request.user', index=0,
-      number=1, type=9, cpp_type=9, label=2,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -87,7 +87,7 @@ _GET_USER_STOCKS_REQUEST = _descriptor.Descriptor(
   ],
   serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -112,7 +112,7 @@ _GET_ALL_STOCKS_REQUEST = _descriptor.Descriptor(
   ],
   serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -130,9 +130,9 @@ _OK_ANSWER = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ok_string', full_name='userService.ok_answer.ok_string', index=0,
-      number=1, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=b"".decode('utf-8'),
+      name='ok_code', full_name='userService.ok_answer.ok_code', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -144,12 +144,12 @@ _OK_ANSWER = _descriptor.Descriptor(
   ],
   serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
   serialized_start=161,
-  serialized_end=191,
+  serialized_end=189,
 )
 
 
@@ -176,12 +176,12 @@ _STOCK_ANSWER = _descriptor.Descriptor(
   ],
   serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=193,
-  serialized_end=222,
+  serialized_start=191,
+  serialized_end=220,
 )
 
 DESCRIPTOR.message_types_by_name['stock_to_user_request'] = _STOCK_TO_USER_REQUEST
@@ -235,8 +235,8 @@ _USER_SERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=225,
-  serialized_end=566,
+  serialized_start=223,
+  serialized_end=564,
   methods=[
   _descriptor.MethodDescriptor(
     name='AddStockToUser',

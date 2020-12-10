@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package authService;
 
@@ -11,18 +11,18 @@ service auth {
 
 
 message user_password_request {
-  required string user = 1;
-  required string password = 2;
+  string user = 1;
+  string password = 2;
 }
 
 message check_token_request {
-  required string token = 1;
+  string token = 1;
 }
 
 message ok_answer {
-  required string ok_string = 1;
+  int32 ok_code = 1;
 }
 
 message token_answer {
-  required string token = 1;
+  string token = 1;
 }
