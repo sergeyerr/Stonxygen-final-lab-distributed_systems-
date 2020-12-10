@@ -2,8 +2,8 @@ import yfinance as yf
 import time
 from concurrent import futures
 import grpc
-import Finance_API_pb2
 import Finance_API_pb2_grpc
+import Finance_API_pb2
 
 stock_names = [('Apple Inc.', 'AAPL'),
                ('Microsoft Corporation', 'MSFT'),
