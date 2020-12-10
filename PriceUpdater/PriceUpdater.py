@@ -1,6 +1,6 @@
 import grpc
-import Finance_API_pb2_grpc
-import Finance_API_pb2
+from PriceUpdater import Finance_API_pb2_grpc
+from PriceUpdater import Finance_API_pb2
 import time
 import redis
 
