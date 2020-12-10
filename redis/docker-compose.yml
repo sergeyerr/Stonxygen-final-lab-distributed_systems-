@@ -1,9 +1,4 @@
 version: '3'
-
-networks:
-  redis_network:
-    driver: overlay
-
 services:
   redis:
     image: 'bitnami/redis:latest'

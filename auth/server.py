@@ -14,7 +14,7 @@ tokens_lifetime_sec = int(getenv('TOKEN_LIFETIME', 300))
 
 class Auth_Servicer(auth_pb2_grpc.authServicer):
     def __init__(self):
-        self.conn = psycopg2.connect(host = host, dbname='stocks', user='postgres', password='postgres')
+        self.conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
         self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         self.cursor = self.conn.cursor()
 
