@@ -2,21 +2,27 @@ import yfinance as yf
 import time
 from concurrent import futures
 import grpc
-from Finance_API import Finance_API_pb2_grpc
 from Finance_API import Finance_API_pb2
+from Finance_API import Finance_API_pb2_grpc
 
-stock_names = [('Apple Inc.', 'AAPL'),
-               ('Microsoft Corporation', 'MSFT'),
-               ('Amazon.com, Inc.', 'AMZN'),
-               ('Alphabet Inc.', 'GOOG'),
-               ('Facebook, Inc.', 'FB'),
-               ('Alibaba Group Holding Limited', 'BABA'),
-               ('Tesla, Inc.', 'TSLA'),
-               ('NVIDIA Corporation', 'NVDA'),
-               ('PayPal Holdings, Inc.', 'PYPL'),
-               ('Salesforce.com Inc', 'CRM'),
-               ('Intel Corporation', 'INTC'),
-               ('Advanced Micro Devices, Inc.', 'AMD')]
+from Finance_API import user_service_pb2
+from Finance_API import user_service_pb2_grpc
+
+
+# stock_names = [('Apple Inc.', 'AAPL'),
+#                ('Microsoft Corporation', 'MSFT'),
+#                ('Amazon.com, Inc.', 'AMZN'),
+#                ('Alphabet Inc.', 'GOOG'),
+#                ('Facebook, Inc.', 'FB'),
+#                ('Alibaba Group Holding Limited', 'BABA'),
+#                ('Tesla, Inc.', 'TSLA'),
+#                ('NVIDIA Corporation', 'NVDA'),
+#                ('PayPal Holdings, Inc.', 'PYPL'),
+#                ('Salesforce.com Inc', 'CRM'),
+#                ('Intel Corporation', 'INTC'),
+#                ('Advanced Micro Devices, Inc.', 'AMD')]
+
+stock_names = []
 
 
 class StocksLoaderServicer(Finance_API_pb2_grpc.StocksLoaderServicer):
@@ -25,6 +31,8 @@ class StocksLoaderServicer(Finance_API_pb2_grpc.StocksLoaderServicer):
         for idx, ticker in enumerate(tickers.tickers):
             data = ticker.history(period='5d')
             last_quote = (data.tail(1)['Close'].iloc[0])
+            if stock_names[idx][0] == '':
+                stock_names[idx][0] = ticker.info['shortName']
             yield Finance_API_pb2.Stock(name=stock_names[idx][0], code=stock_names[idx][1], price=[last_quote])
 
     def get_stocks_history(self, request, context):
@@ -37,6 +45,11 @@ class StocksLoaderServicer(Finance_API_pb2_grpc.StocksLoaderServicer):
 
 
 def serve():
+    with grpc.insecure_channel('localhost:50051') as channel:
+        stub = user_service_pb2_grpc.user_serviceStub(channel)
+        for code in stub.GetAllStocks(user_service_pb2.GetAllStocksRequest()).codes:
+            stock_names.append(('', code))
+
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     Finance_API_pb2_grpc.add_StocksLoaderServicer_to_server(
         StocksLoaderServicer(), server)
