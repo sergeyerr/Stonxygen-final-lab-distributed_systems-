@@ -5,7 +5,7 @@ require "env"
 if Env::REDIS == "localhost"
   REDIS = Redis.new(host: Env::REDIS, port: 6379)
 else
-  SENTINELS = [{host: Env::REDIS_SENTINEL, port: 26379, password: "redis"}]
+  SENTINELS = [{host: Env::REDIS_SENTINEL, port: 26379}]
   REDIS = Redis.new(
     host: Env::REDIS,
     password: "redis",
