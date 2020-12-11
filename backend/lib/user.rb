@@ -55,12 +55,15 @@ class User
   def self.authenticate(token)
     LOGGER.debug("Authenticating user...")
     request = AuthService::CheckTokenRequest.new(token: token)
-    response = AUTH.check_token(request)
-    LOGGER.debug("User successfully authenticated...")
-    name = response.user
-    stocks = self.stocks(name)
-
-    User.new(name, stocks)
+    begin
+      response = AUTH.check_token(request)
+      LOGGER.debug("User successfully authenticated...")
+      name = response.user
+      stocks = self.stocks(name)
+      User.new(name, stocks)
+    rescue GRPC::InvalidArgument
+      raise BadTokenError.new
+    end
   end
 
   def self.signup(name, password)

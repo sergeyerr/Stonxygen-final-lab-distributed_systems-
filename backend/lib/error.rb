@@ -3,3 +3,6 @@ end
 
 class DataError < StandardError
 end
+
+class BadTokenError < StandardError
+end

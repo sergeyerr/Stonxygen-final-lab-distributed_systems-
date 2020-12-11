@@ -154,6 +154,16 @@ get "/api/stock/statistic" do
   end
 end
 
+error BadTokenError do
+  [
+    200,
+    {
+      success: false,
+      reason: "bad user token"
+    }.to_json
+  ]
+end
+
 error 403 do
   {
     success: false,
