@@ -6,7 +6,12 @@ if Env::REDIS == "localhost"
   REDIS = Redis.new(host: Env::REDIS, port: 6379)
 else
   SENTINELS = [{host: Env::REDIS_SENTINEL, port: 26379, password: "redis"}]
-  REDIS = Redis.new(host: Env::REDIS, sentinels: SENTINELS, role: :slave)
+  REDIS = Redis.new(
+    host: Env::REDIS,
+    password: "redis",
+    sentinels: SENTINELS,
+    role: :slave
+  )
 end
 
 class Stock
