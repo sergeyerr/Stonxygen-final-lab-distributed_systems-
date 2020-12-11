@@ -91,6 +91,13 @@ services:
      - POSTGRES_CONNECTION=postgres
     depends_on:
      - postgres
+     
+  nginx_server:
+    image: sergeyer/trrp_nginx
+    ports:
+      - "80:80"
+    networks:
+    - services_network
   
   pg-0:
     image: bitnami/postgresql-repmgr:11
