@@ -9,11 +9,15 @@ class AuthenticationService < AuthService::Auth::Service
   end
 
   def check_token(request, _call)
-    AuthService::OkAnswer.new(ok_code: 1)
+    if request.token == "mackerel"
+      AuthService::UserAnswer.new(user: "Mackerel")
+    else
+      raise GRPC::InvalidArgument.new("Noooo")
+    end
   end
 
   def register_user(request, _call)
-    AuthService::OkAnswer.new(ok_code: 1)
+    AuthService::TokenAnswer.new(token: "mackerel")
   end
 end
 
