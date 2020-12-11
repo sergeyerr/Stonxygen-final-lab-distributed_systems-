@@ -58,6 +58,9 @@ class Stock
   end
 
   def self.prices(codes)
+    if codes.length == 0
+      return []
+
     prices = REDIS.mget(*codes)
     if prices.any? { |p| p.nil? }
       raise DataError.new("Some stocks prices are unavailable")
