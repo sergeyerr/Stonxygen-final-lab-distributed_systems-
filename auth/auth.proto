@@ -5,7 +5,7 @@ package authService;
 
 service auth {
   rpc GetToken(UserPasswordRequest) returns (TokenAnswer) {}
-  rpc CheckToken(CheckTokenRequest) returns (OkAnswer) {}
+  rpc CheckToken(CheckTokenRequest) returns (UserAnswer) {}
   rpc RegisterUser(UserPasswordRequest) returns (TokenAnswer) {}
 }
 
@@ -19,8 +19,8 @@ message CheckTokenRequest {
   string token = 1;
 }
 
-message OkAnswer {
-  int32 ok_code = 1;
+message UserAnswer {
+  string user = 1;
 }
 
 message TokenAnswer {

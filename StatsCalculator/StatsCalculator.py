@@ -1,12 +1,12 @@
 import pika, sys, os
 import json
 import grpc
-from StatsCalculator import Finance_API_pb2
-from StatsCalculator import Finance_API_pb2_grpc
+import Finance_API_pb2
+import Finance_API_pb2_grpc
 import redis
 import socket
-from StatsCalculator import user_service_pb2
-from StatsCalculator import user_service_pb2_grpc
+import user_service_pb2
+import user_service_pb2_grpc
 from os import getenv
 
 stat_expiration_time = getenv('STAT_EXPIRATION_TIME', '30')
@@ -97,7 +97,8 @@ def callback(ch, method, properties, body):
 
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+    credentials = pika.credentials.PlainCredentials('rabbit', 'rabbit', erase_on_connect=False)
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, credentials=credentials))
     channel = connection.channel()
 
     channel.queue_declare(queue='hello')
