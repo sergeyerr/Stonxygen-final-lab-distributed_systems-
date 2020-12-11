@@ -2,6 +2,7 @@ require "sinatra"
 require "json"
 require "stock"
 require "user"
+require "error"
 
 before do
   content_type :json
@@ -12,10 +13,7 @@ get "/api/ping" do
 end
 
 get "/api/stock/list" do
-  stocks = (1..25).map { |v|
-    Stock.new("Stock #{v}", "Organization #{v}", v / 100.0)
-  }
-
+  stocks = Stock.all_available
   {
     success: true,
     reason: "",
@@ -57,60 +55,50 @@ end
 post "/api/user/login" do
   name = request.env["HTTP_NAME"]
   password = request.env["HTTP_PASSWORD"]
-  begin
-    u = User.login(name, password)
-    {
-      success: true,
-      reason: "",
-      user: u,
-      token: "mackerel"
-    }.to_json
-  rescue => e
-    puts e
-    {
-      success: false,
-      reason: e.to_s
-    }
-  end
-end
-
-post "/api/user/signup" do
+  u, t = User.login(name, password)
   {
     success: true,
     reason: "",
-    user: User.new("Mackerel", []),
-    token: "mackerel"
+    user: u,
+    token: t
+  }.to_json
+end
+
+post "/api/user/signup" do
+  name = request.env["HTTP_NAME"]
+  password = request.env["HTTP_PASSWORD"]
+  u, t = User.signup name, password
+  {
+    success: true,
+    reason: "",
+    user: u,
+    token: t
   }.to_json
 end
 
 get "/api/*" do
-  if request.cookies["token"] == "mackerel"
+  if User.authenticate(request.cookies["token"])
     pass
   else
-    [
-      403,
-      {
-        success: false,
-        reason: "forbidden"
-      }.to_json
-    ]
+    403
   end
 end
 
 get "/api/user/info" do
-  stocks = (100..110).map { |v|
-    Stock.new("Stock #{v}", "Organization #{v}", v / 100.0)
-  }
-
-  {
-    success: true,
-    reason: "",
-    user: User.new("Mackerel", stocks)
-  }.to_json
+  u = User.authenticate(request.cookies["token"])
+  if !u.nil?
+    {
+      success: true,
+      reason: "",
+      user: u
+    }.to_json
+  else
+    403
+  end
 end
 
 get(/\/api\/stock\/(?:buy|sell)/) do
-  if params.has_key?("code") && params.has_key?("user")
+  if params.has_key?("code")
     pass
   else
     [
@@ -119,16 +107,52 @@ get(/\/api\/stock\/(?:buy|sell)/) do
         success: false,
         reason:
           "malformed request, please make " \
-          "sure \"code\" and \"user\" URL-parameters are present"
+          "sure \"code\" URL-parameter is present"
       }.to_json
     ]
   end
 end
 
 get "/api/stock/buy" do
-  "STUB"
+  u = User.authenticate
+  if !u.nil?
+    u.buy(params["code"])
+    {success: true, reason: ""}.to_json
+  else
+    403
+  end
 end
 
 get "/api/stock/sell" do
-  "STUB"
+  u = User.authenticate
+  if !u.nil?
+    u.sell(params["code"])
+    {success: true, reason: ""}.to_json
+  else
+    403
+  end
+end
+
+get "/api/stock/statistic" do
+  u = User.authenticate
+  if !u.nil?
+    s = Stock.statistic(params["code"], u.name)
+    {success: true, reason: "", statistic: s}.to_json
+  else
+    403
+  end
+end
+
+error 403 do
+  {
+    success: false,
+    reason: "forbidden"
+  }.to_json
+end
+
+error 500 do
+  {
+    success: false,
+    reason: env["sinatra.error"].to_s
+  }.to_json
 end

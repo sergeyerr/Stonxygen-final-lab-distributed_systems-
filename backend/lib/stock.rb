@@ -30,8 +30,13 @@ class Stock
     stocks(codes, prices, organizations)
   end
 
-  def statistic
-    REDIS.get(code)
+  def self.statistic(code, username)
+    s = REDIS.get("#{username}_#{code}")
+    if !s.nil?
+      s.to_f
+    else
+      s
+    end
   end
 
   def to_json(*options)

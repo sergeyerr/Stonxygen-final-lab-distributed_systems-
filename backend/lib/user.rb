@@ -17,7 +17,18 @@ class User
   def initialize(name, stocks, token)
     @name = name
     @stocks = []
-    @token = ""
+  end
+
+  def buy(code)
+    request = UserService::StockToUserRequest(user: @name, stock_code: code)
+    response = USER.add_stock_to_user(request)
+    response.ok_code
+  end
+
+  def sell(code)
+    request = UserService::StockToUserRequest(user: @name, stock_code: code)
+    response = USER.remove_stock_from_user(request)
+    response.ok_code
   end
 
   def self.login(name, password)
@@ -26,33 +37,37 @@ class User
     token = response.token
     stocks = self.stocks(name)
 
-    User.new(name, stocks, token)
+    [User.new(name, stocks), token]
   end
 
   def self.authenticate(token)
-    request = AuthService::CheckTokenRequest.new(token)
-    response = AUTH.CheckToken(request)
-    response.ok_code
+    request = AuthService::CheckTokenRequest.new(token: token)
+    response = AUTH.check_token(request)
+    name = response.user
+    if name != ""
+      stocks = self.stocks(name)
+      User.new(name, stocks)
+    end
   end
 
-  def self.register(name, password)
+  def self.signup(name, password)
     request = AuthService::UserPasswordRequest.new(
       user: name,
       password: password
     )
     response = USER.register_user(request)
-    User.new(name, stocks, response.token)
+    [User.new(name, []), response.token]
   end
 
   def to_json(*options)
     {name: @name, stocks: @stocks, token: @token}.to_json(*options)
   end
 
-  private
-
-  def stocks(name)
-    request = UserService::GetUserStocksRequest(user: name)
+  def self.stocks(name)
+    request = UserService::GetUserStocksRequest.new(user: name)
     response = USER.get_stocks(request)
     response.codes.map { |code| Stock.new(code, "", 0) }
   end
+
+  private_class_method :stocks
 end

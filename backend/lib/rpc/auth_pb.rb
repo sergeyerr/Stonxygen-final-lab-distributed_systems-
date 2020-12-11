@@ -12,8 +12,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "authService.CheckTokenRequest" do
       optional :token, :string, 1
     end
-    add_message "authService.OkAnswer" do
-      optional :ok_code, :int32, 1
+    add_message "authService.UserAnswer" do
+      optional :user, :string, 1
     end
     add_message "authService.TokenAnswer" do
       optional :token, :string, 1
@@ -24,6 +24,6 @@ end
 module AuthService
   UserPasswordRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.UserPasswordRequest").msgclass
   CheckTokenRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.CheckTokenRequest").msgclass
-  OkAnswer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.OkAnswer").msgclass
+  UserAnswer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.UserAnswer").msgclass
   TokenAnswer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.TokenAnswer").msgclass
 end

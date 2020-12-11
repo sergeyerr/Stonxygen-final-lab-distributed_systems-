@@ -15,7 +15,7 @@ module AuthService
       self.service_name = 'authService.auth'
 
       rpc :GetToken, ::AuthService::UserPasswordRequest, ::AuthService::TokenAnswer
-      rpc :CheckToken, ::AuthService::CheckTokenRequest, ::AuthService::OkAnswer
+      rpc :CheckToken, ::AuthService::CheckTokenRequest, ::AuthService::UserAnswer
       rpc :RegisterUser, ::AuthService::UserPasswordRequest, ::AuthService::TokenAnswer
     end
 
