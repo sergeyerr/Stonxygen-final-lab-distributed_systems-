@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-import { API, DEFAULT_TIMEOUT, moderateResponse } from './api';
-import { StatusError } from './error';
+import { API, DEFAULT_TIMEOUT, sieve } from './api';
+import { ResponseError, StatusError } from './error';
 import Stock from './stock';
 import timeout from './timeout';
 
@@ -26,30 +26,51 @@ export class User {
     async buyStock(stock) {
         return timeout(
             DEFAULT_TIMEOUT,
-            fetch(API + `/stock/buy?code="${stock.code}"`)
-                .then(moderateResponse)
-                .then(response => response.json())
+            sieve(
+                fetch(
+                    API + `/stock/buy?code="${stock.code}"`,
+                    { method: "POST" }
+                )
+            )
                 .then(response => {
                     if (response.success) {
                         this.selectedStocks.push(stock);
                         return response;
                     } else {
-                        throw new Error(response.message);
+                        throw new ResponseError(response.message);
                     }
                 })
         );
     }
 
+    async sellStock(stock) {
+        return timeout(
+            DEFAULT_TIMEOUT,
+            sieve(
+                fetch(
+                    API + `/stock/sell?code="${stock.code}"`,
+                    { method: "POST" }
+                )
+            )
+                .then(response => {
+                    if (response.success) {
+                        this.selectedStocks =
+                            this.selectedStocks.filter(s => s.code != stock.code);
+                    } else {
+                        throw new ResponseError(response.message);
+                    }
+                })
+        )
+    }
+
     static async signup(name, password) {
-        return fetch(API + '/user/signup', {
+        return sieve(fetch(API + '/user/signup', {
             method: 'POST',
-            headers: {
+            body: JSON.stringify({
                 'name': name,
                 'password': password
-            }
-        })
-            .then(moderateResponse)
-            .then(response => response.json())
+            })
+        }))
             .then(response => {
                 document.cookie = `token=${response.token}`;
                 return new User(
@@ -64,15 +85,13 @@ export class User {
     }
 
     static async login(name, password) {
-        return fetch(API + '/user/login', {
+        return sieve(fetch(API + '/user/login', {
             method: 'POST',
-            headers: {
+            body: JSON.stringify({
                 'name': name,
                 'password': password 
-            }
-        })
-            .then(moderateResponse)
-            .then(response => response.json())
+            })
+        }))
             .then(response => {
                 document.cookie = `token=${response.token}`;
                 return new User(
@@ -87,9 +106,7 @@ export class User {
     }
 
     static async authenticate() {
-        return timeout(DEFAULT_TIMEOUT, fetch(API + `/user/info`))
-            .then(moderateResponse)
-            .then(response => response.json())
+        return timeout(DEFAULT_TIMEOUT, sieve(fetch(API + `/user/info`)))
             .then(response => new User(
                 response.user.name, 
                 {
@@ -108,7 +125,7 @@ export const userPromise = User.authenticate()
         return u;
     })
     .catch(error => {
-        if (!(error instanceof StatusError) || error.code !== 403) {
+        if (error.message != 'bad user token') {
             throw error;
         }
     });

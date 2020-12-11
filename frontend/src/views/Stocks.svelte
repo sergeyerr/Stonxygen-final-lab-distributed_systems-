@@ -1,6 +1,7 @@
 <script>
     import Stock from "../../lib/stock.js";
     import ProgressCircular from 'smelte/src/components/ProgressCircular';
+    import Snackbar from "smelte/src/components/Snackbar";
     import { user } from "../../lib/user.js";
     import { navigate, link } from "svelte-routing";
     import List from "smelte/src/components/List";
@@ -11,6 +12,8 @@
 
     let items = [];
     let itemsPromise = null;
+    let showErrorMessage = false;
+    let error = null;
 
     function grabStock(stock) {
         if ($user.name != null) {
@@ -18,8 +21,9 @@
                 .then(() => {
                     $user = $user;
                 })
-                .catch((reason) => {
-                    alert(reason.message);
+                .catch(e => {
+                    error = e;
+                    showErrorMessage = true;
                 })
             return true;
         } else {
@@ -42,6 +46,15 @@
         reloadStocks();
     })
 </script>
+
+<Snackbar color="alert" top bind:value={showErrorMessage}>
+    <p>
+        {error.message}
+        {#if error.code != null}
+            {error.code}
+        {/if}
+    </p>
+</Snackbar>
 
 <div class="flex flex-col m-auto w-1/2">
     <div class="text-center">

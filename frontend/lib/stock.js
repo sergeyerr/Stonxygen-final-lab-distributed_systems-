@@ -1,4 +1,4 @@
-import { API, DEFAULT_TIMEOUT, moderateResponse } from './api';
+import { API, DEFAULT_TIMEOUT, sieve } from './api';
 import timeout from './timeout';
 
 export default class Stock {
@@ -6,20 +6,19 @@ export default class Stock {
         this.code = code;
         this.price = price;
         this.organization = organization;
-        this.statistic = statistic;
     }
 
     static allAvailable() {
-        return timeout(DEFAULT_TIMEOUT, fetch(API + '/stock/list'))
-            .then(moderateResponse)
-            .then(response => response.json())
+        return timeout(DEFAULT_TIMEOUT, sieve(fetch(API + '/stock/list')))
             .then(response => response.stocks)
             .then(stocks =>
                 stocks.map(s => new Stock(s.code, s.price, s.organization))
             );
     }
 
-    async variance() {
-        return "?";
+    async statistic() {
+        timeout(DEFAULT_TIMEOUT, sieve(
+            fetch(API + `/stock/statistic?code=${this.code}`)
+        ))
     }
 }

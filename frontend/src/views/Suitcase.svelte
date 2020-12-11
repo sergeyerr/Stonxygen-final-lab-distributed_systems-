@@ -3,14 +3,21 @@
     import Card from "smelte/src/components/Card";
     import Button from "smelte/src/components/Button";
     import ProgressCircular from 'smelte/src/components/ProgressCircular';
+    import Snackbar from "smelte/src/components/Snackbar";
     import { flip } from 'svelte/animate';
     import { onMount } from "svelte";
     import { user } from "../../lib/user.js";
 
+    let showErrorMessage = false;
+    let error = null;
+
     function sellStock(item) {
-        $user.selectedStocks = $user.selectedStocks.filter(
-            (s) => item.code !== s.code
-        );
+        $user.sellStock(item)
+            .then(() => $user = $user)
+            .catch(e => {
+                error = e;
+                showErrorMessage = true;
+            })
     }
 
     $: sortedStocks = ((stocks) => {
@@ -27,6 +34,15 @@
         }
     });
 </script>
+
+<Snackbar color="alert" top bind:value={showErrorMessage}>
+    <p>
+        {error.message}
+        {#if error.code != null}
+            {error.code}
+        {/if}
+    </p>
+</Snackbar>
 
 <div class="flex mx-auto flex-col items-center">
     <h3 class="mx-auto">Suitcase</h3>
@@ -55,20 +71,14 @@
     {:else}
         <div class="flex flex-wrap mx-32 justify-center my-auto">
             {#each sortedStocks as item (item.code)}
-                <div animate:flip={{duration: 300}}>
+                <div animate:flip={{duration: 300}} on:mouseenter="">
                     <Card.Card class="mb-4 mr-4">
                         <div slot="title">
                             <Card.Title title={item.code} subheader={item.organization}/>
                         </div>
                         <div slot="text" class="px-4 pb-0 pt-0 text-right">
                             <span class="mr-8">${item.price}</span>
-                            {#await item.variance()}
-                                ...
-                            {:then v}
-                                <span>VAR {v}</span>
-                            {:catch e}
-                                <span>{e.message}</span>
-                            {/await}
+                            <span>VAR</span>
                         </div>
                         <div slot="actions" class="flex justify-center">
                             <div class="p-2">
