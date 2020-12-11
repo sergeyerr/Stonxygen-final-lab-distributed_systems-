@@ -10,7 +10,7 @@ before do
 end
 
 get "/api/ping" do
-  "pong"
+  {success: true, reason: ""}
 end
 
 get "/api/stock/list" do
@@ -90,7 +90,6 @@ post "/api/user/signup" do
 end
 
 get "/api/user/info" do
-  check_credentials request
   u = User.authenticate request.cookies["token"]
   if !u.nil?
     {
@@ -168,7 +167,7 @@ error 500 do
     reason:
       "a dark wizard has magically " \
       "transformed the remote server into a toad"
-  }
+  }.to_json
 end
 
 not_found do
