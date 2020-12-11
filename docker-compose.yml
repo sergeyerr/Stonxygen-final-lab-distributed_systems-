@@ -19,7 +19,7 @@ volumes:
     
 services:
   backend:
-    image: test
+    image: sergeyer/trrp_backend:latest
     hostname: '{{.Task.Name}}'
     networks:
      - services_network
@@ -31,7 +31,8 @@ services:
      - auth
     environment:
      - MY_HOSTNAME='{{.Task.Name}}'
-     - REDIS=redis
+     - REDIS=mymaster
+     - REDIS_SENTINEL=redis-sentinel
      - RABBITMQ=rabbit
      - AUTH_SERVICE=auth
      - USER_SERVICE=user_service
@@ -98,6 +99,8 @@ services:
       - "80:80"
     networks:
     - services_network
+    depends_on:
+    - backend
   
   pg-0:
     image: bitnami/postgresql-repmgr:11
