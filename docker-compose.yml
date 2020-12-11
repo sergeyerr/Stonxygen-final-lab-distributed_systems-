@@ -25,6 +25,7 @@ services:
      - services_network
      - postgres_network
      - redis_network
+     - rabbit_network
     depends_on:
      - user_service
      - rabbit
