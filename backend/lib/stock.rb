@@ -60,6 +60,7 @@ class Stock
   def self.prices(codes)
     if codes.length == 0
       return []
+    end
 
     prices = REDIS.mget(*codes)
     if prices.any? { |p| p.nil? }
