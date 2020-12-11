@@ -75,9 +75,9 @@ def save_to_redis(user, stock_code, the_stat):
     redis_conn.set(user + "_" + stock_code, the_stat, ex=int(stat_expiration_time))
 
 
-def respond_by_socket(address):
+def respond_by_socket(address, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect(('127.0.0.1', 7777))  # use address variable!
+        s.connect((address, int(port))  # use address variable!
         s.sendall(b'Stat calculated and saved')
         data = s.recv(1024)
     print('Received', repr(data))
@@ -86,8 +86,10 @@ def respond_by_socket(address):
 def callback(ch, method, properties, body):
     msg = json.loads(body)
     user = msg["user"]
-    stock_code = msg["stock_code"]
-    address = msg["address"]
+    stock_code = msg["code"]
+    address = msg["host"]
+    port = msg["port"]
+
 
     stocks = get_user_stocks(user)  # expecting list of stock codes ['AAPL', 'MSFT',..] or (better) string 'AAPL MSFT ..'
 
@@ -97,7 +99,7 @@ def callback(ch, method, properties, body):
     print(the_stat)
     save_to_redis(user, stock_code, the_stat)
 
-    respond_by_socket(address)
+    respond_by_socket(address, port)
 
 
 def main():
