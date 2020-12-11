@@ -2,7 +2,12 @@ require "redis"
 require "error"
 require "env"
 
-REDIS = Redis.new(host: Env::REDIS, port: 6379)
+if Env::REDIS == "localhost"
+  REDIS = Redis.new(host: Env::REDIS, port: 6379)
+else
+  SENTINELS = [{host: Env::REDIS_SENTINEL, port: 26379}]
+  REDIS = Redis.new(host: Env::REDIS, sentinels: SENTINELS, role: :slave)
+end
 
 class Stock
   def initialize(code, organization, price)
@@ -30,7 +35,7 @@ class Stock
     stocks(codes, prices, organizations)
   end
 
-  def self.statistic(code, username)
+  def self.statistic(username, code)
     s = REDIS.get("#{username}_#{code}")
     if !s.nil?
       s.to_f

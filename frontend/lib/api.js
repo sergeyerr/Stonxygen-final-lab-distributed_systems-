@@ -2,7 +2,7 @@ import timeout from './timeout';
 import { APIError, StatusError, TimeoutError } from './error';
 
 export const DEFAULT_TIMEOUT = 3000;
-export const API = 'http://localhost:3000/api';
+export const API = new URL(document.URL) + '/api';
 
 export function moderateResponse(response) {
     if (!response.ok) {

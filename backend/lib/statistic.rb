@@ -10,11 +10,11 @@ CONN = Bunny.new("amqp://guest:guest@#{Env::RABBITMQ}:5672")
 CONN.start
 
 class StatRequest
-  def initialize(username, stock)
+  def initialize(username, code)
     @channel = CONN.create_channel
     @exchange = @channel.default_exchange
     @username = username
-    @stock = stock
+    @code = code
   end
 
   def perform
@@ -24,13 +24,15 @@ class StatRequest
 
     message = {
       user: @username,
-      code: @stock.code,
+      code: @code,
       host: Env::HOSTNAME,
       port: port
     }.to_json
 
     @exchange.publish(message, routing_key: q.name, expiration: "3000")
-    LOGGER.debug("Awaiting response to statistics message on port #{port}...")
+    LOGGER.debug(
+      "Awaiting response to the sent message with socket on port #{port}..."
+    )
     begin
       wait_for_response(socket)
     rescue Timeout::Error
@@ -46,13 +48,14 @@ class StatRequest
       s = socket.accept
       b = s.recv(1)
       if b == "1"
-        begin
-          LOGGER.debug("Received statistic from service...")
-          @stock.statistic
-        rescue
+        LOGGER.debug("Received statistic from service...")
+        st = Stock.statistic(@username, @code)
+        if st.nil?
           raise CommunicationError.new(
             "The requested statistic was not found in the store"
           )
+        else
+          st
         end
       elsif b == "0"
         raise CommunicationError.new("The statistic service failed")
