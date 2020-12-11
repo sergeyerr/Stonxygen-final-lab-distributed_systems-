@@ -2,7 +2,10 @@ require "sinatra"
 require "json"
 require "stock"
 require "user"
+<<<<<<< HEAD
 require "error"
+=======
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
 
 before do
   content_type :json
@@ -13,7 +16,14 @@ get "/api/ping" do
 end
 
 get "/api/stock/list" do
+<<<<<<< HEAD
   stocks = Stock.all_available
+=======
+  stocks = (1..25).map { |v|
+    Stock.new("Stock #{v}", "Organization #{v}", v / 100.0)
+  }
+
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
   {
     success: true,
     reason: "",
@@ -77,14 +87,28 @@ post "/api/user/signup" do
 end
 
 get "/api/*" do
+<<<<<<< HEAD
   if User.authenticate(request.cookies["token"])
     pass
   else
     403
+=======
+  if request.cookies["token"] == "mackerel"
+    pass
+  else
+    [
+      403,
+      {
+        success: false,
+        reason: "forbidden"
+      }.to_json
+    ]
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
   end
 end
 
 get "/api/user/info" do
+<<<<<<< HEAD
   u = User.authenticate(request.cookies["token"])
   if !u.nil?
     {
@@ -99,6 +123,21 @@ end
 
 get(/\/api\/stock\/(?:buy|sell)/) do
   if params.has_key?("code")
+=======
+  stocks = (100..110).map { |v|
+    Stock.new("Stock #{v}", "Organization #{v}", v / 100.0)
+  }
+
+  {
+    success: true,
+    reason: "",
+    user: User.new("Mackerel", stocks)
+  }.to_json
+end
+
+get(/\/api\/stock\/(?:buy|sell)/) do
+  if params.has_key?("code") && params.has_key?("user")
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
     pass
   else
     [
@@ -107,13 +146,18 @@ get(/\/api\/stock\/(?:buy|sell)/) do
         success: false,
         reason:
           "malformed request, please make " \
+<<<<<<< HEAD
           "sure \"code\" URL-parameter is present"
+=======
+          "sure \"code\" and \"user\" URL-parameters are present"
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
       }.to_json
     ]
   end
 end
 
 get "/api/stock/buy" do
+<<<<<<< HEAD
   u = User.authenticate
   if !u.nil?
     u.buy(params["code"])
@@ -155,4 +199,11 @@ error 500 do
     success: false,
     reason: env["sinatra.error"].to_s
   }.to_json
+=======
+  "STUB"
+end
+
+get "/api/stock/sell" do
+  "STUB"
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
 end

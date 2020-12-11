@@ -24,6 +24,10 @@ end
 module AuthService
   UserPasswordRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.UserPasswordRequest").msgclass
   CheckTokenRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.CheckTokenRequest").msgclass
+<<<<<<< HEAD
   UserAnswer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.UserAnswer").msgclass
+=======
+  OkAnswer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.OkAnswer").msgclass
+>>>>>>> e0eb3809017b2d144d4165e794326a94e5baed6e
   TokenAnswer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("authService.TokenAnswer").msgclass
 end
