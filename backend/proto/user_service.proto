@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package userService;
+
+
+service user_service {
+  rpc AddStockToUser(StockToUserRequest) returns (OkAnswer) {}
+  rpc RemoveStockFromUser(StockToUserRequest) returns (OkAnswer) {}
+  rpc GetStocks(GetUserStocksRequest) returns (StockAnswer) {}
+  rpc GetAllStocks(GetAllStocksRequest) returns (StockAnswer) {}
+}
+
+
+message StockToUserRequest {
+  string user = 1;
+  string stock_code = 2;
+}
+
+message GetUserStocksRequest {
+  string user = 1;
+}
+
+message GetAllStocksRequest {
+}
+
+message OkAnswer {
+  int32 ok_code = 1;
+}
+
+message StockAnswer {
+  repeated string codes = 1;
+}
