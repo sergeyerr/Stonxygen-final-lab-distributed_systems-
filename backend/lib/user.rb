@@ -4,12 +4,12 @@ require "env"
 require "stock"
 
 USER = UserService::UserService::Stub.new(
-  "#{Env::USER}:50001",
+  "#{Env::USER_SERVICE}:50001",
   :this_channel_is_insecure
 )
 
 AUTH = AuthService::Auth::Stub.new(
-  "#{Env::AUTH}:50000",
+  "#{Env::AUTH_SERVICE}:50000",
   :this_channel_is_insecure
 )
 
