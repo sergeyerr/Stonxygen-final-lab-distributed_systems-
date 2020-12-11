@@ -1,14 +1,15 @@
 require "rpc/user_service_services_pb"
 require "rpc/auth_services_pb"
 require "env"
+require "stock"
 
 USER = UserService::UserService::Stub.new(
-  "localhost:50001",
+  "#{Env::USER}:50001",
   :this_channel_is_insecure
 )
 
 AUTH = AuthService::Auth::Stub.new(
-  "localhost:50000",
+  "#{Env::AUTH}:50000",
   :this_channel_is_insecure
 )
 
@@ -21,13 +22,16 @@ class User
 
   def self.login(name, password)
     request = AuthService::UserPasswordRequest.new(user: name, password: password)
-    response = STUB.get_token(request)
-    response.token
+    response = AUTH.get_token(request)
+    token = response.token
+    stocks = self.stocks(name)
+
+    User.new(name, stocks, token)
   end
 
   def self.authenticate(token)
     request = AuthService::CheckTokenRequest.new(token)
-    response = STUB.CheckToken(request)
+    response = AUTH.CheckToken(request)
     response.ok_code
   end
 
@@ -36,11 +40,19 @@ class User
       user: name,
       password: password
     )
-    response = AUTH.register_user(request)
-    User.new(name, [], response.token)
+    response = USER.register_user(request)
+    User.new(name, stocks, response.token)
   end
 
   def to_json(*options)
     {name: @name, stocks: @stocks, token: @token}.to_json(*options)
+  end
+
+  private
+
+  def stocks(name)
+    request = UserService::GetUserStocksRequest(user: name)
+    response = USER.get_stocks(request)
+    response.codes.map { |code| Stock.new(code, "", 0) }
   end
 end

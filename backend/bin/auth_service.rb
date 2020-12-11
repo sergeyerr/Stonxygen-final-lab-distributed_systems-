@@ -5,7 +5,7 @@ require "rpc/auth_services_pb"
 
 class AuthenticationService < AuthService::Auth::Service
   def get_token(request, _call)
-    AuthService::TokenAnswer.new(token: "TOKEN")
+    AuthService::TokenAnswer.new(token: "mackerel")
   end
 
   def check_token(request, _call)
