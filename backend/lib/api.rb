@@ -55,12 +55,23 @@ post(/\/api\/user\/(?:login|signup)/) do
 end
 
 post "/api/user/login" do
-  {
-    success: true,
-    reason: "",
-    user: User.new("Mackerel", []),
-    token: "mackerel"
-  }.to_json
+  name = request.env["HTTP_NAME"]
+  password = request.env["HTTP_PASSWORD"]
+  begin
+    u = User.login(name, password)
+    {
+      success: true,
+      reason: "",
+      user: u,
+      token: "mackerel"
+    }.to_json
+  rescue => e
+    puts e
+    {
+      success: false,
+      reason: e.to_s
+    }
+  end
 end
 
 post "/api/user/signup" do
@@ -98,12 +109,9 @@ get "/api/user/info" do
   }.to_json
 end
 
-get "/api/stock/buy" do
-  if params.has_key?("code")
-    {
-      success: true,
-      reason: ""
-    }.to_json
+get(/\/api\/stock\/(?:buy|sell)/) do
+  if params.has_key?("code") && params.has_key?("user")
+    pass
   else
     [
       400,
@@ -111,8 +119,16 @@ get "/api/stock/buy" do
         success: false,
         reason:
           "malformed request, please make " \
-          "sure \"code\" is provided in the URL"
+          "sure \"code\" and \"user\" URL-parameters are present"
       }.to_json
     ]
   end
+end
+
+get "/api/stock/buy" do
+  "STUB"
+end
+
+get "/api/stock/sell" do
+  "STUB"
 end
