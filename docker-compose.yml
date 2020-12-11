@@ -93,7 +93,7 @@ services:
      - postgres
      
   nginx_server:
-    image: sergeyer/trrp_nginx
+    image: sergeyer/trrp_nginx:latest
     ports:
       - "80:80"
     networks:
