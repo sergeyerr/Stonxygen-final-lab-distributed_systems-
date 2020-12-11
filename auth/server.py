@@ -37,19 +37,20 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
 
     def CheckToken(self, request, context):
         token = request.token
-        self.cursor.execute(f"SELECT now() - token_date FROM users WHERE token='{token}'")
+        self.cursor.execute(f"SELECT nick, now() - token_date FROM users WHERE token='{token}'")
         res = self.cursor.fetchall()
         if len(res) == 0:
             context.set_details("token doesn't exist")
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-            return auth_pb2.OkAnswer()
+            return auth_pb2.UserAnswer()
         res = res[0]
-        left_time = res[0]
+        user = res[0]
+        left_time = res[1]
         if left_time.seconds < tokens_lifetime_sec:
-            return auth_pb2.OkAnswer(ok_code=1)
+            return auth_pb2.OkAnswer(user=user)
         context.set_details("token outdated")
         context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-        return auth_pb2.OkAnswer()
+        return auth_pb2.UserAnswer()
 
     def RegisterUser(self, request, context):
         passwd = hash(request.password)

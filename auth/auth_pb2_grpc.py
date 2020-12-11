@@ -22,7 +22,7 @@ class authStub(object):
         self.CheckToken = channel.unary_unary(
                 '/authService.auth/CheckToken',
                 request_serializer=auth__pb2.CheckTokenRequest.SerializeToString,
-                response_deserializer=auth__pb2.OkAnswer.FromString,
+                response_deserializer=auth__pb2.UserAnswer.FromString,
                 )
         self.RegisterUser = channel.unary_unary(
                 '/authService.auth/RegisterUser',
@@ -63,7 +63,7 @@ def add_authServicer_to_server(servicer, server):
             'CheckToken': grpc.unary_unary_rpc_method_handler(
                     servicer.CheckToken,
                     request_deserializer=auth__pb2.CheckTokenRequest.FromString,
-                    response_serializer=auth__pb2.OkAnswer.SerializeToString,
+                    response_serializer=auth__pb2.UserAnswer.SerializeToString,
             ),
             'RegisterUser': grpc.unary_unary_rpc_method_handler(
                     servicer.RegisterUser,
@@ -110,7 +110,7 @@ class auth(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/authService.auth/CheckToken',
             auth__pb2.CheckTokenRequest.SerializeToString,
-            auth__pb2.OkAnswer.FromString,
+            auth__pb2.UserAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
