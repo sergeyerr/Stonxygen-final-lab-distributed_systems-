@@ -67,7 +67,11 @@ def calc_stat_for_stock(stocks_with_prices, stock_code):
 
 
 def save_to_redis(user, stock_code, the_stat):
-    redis_conn = redis.Redis()
+    if finance_api_host == 'localhost':
+        redis_conn = redis.Redis()
+    else:
+        sentinel = Sentinel([('redis-sentinel', '26379')], socket_timeout=0.1)
+        redis_conn = sentinel.master_for('mymaster', socket_timeout=0.1, password='redis')
     redis_conn.set(user + "_" + stock_code, the_stat, ex=int(stat_expiration_time))
 
 
