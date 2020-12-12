@@ -8,6 +8,7 @@ import socket
 import user_service_pb2
 import user_service_pb2_grpc
 from os import getenv
+from redis.sentinel import Sentinel
 
 import logging
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -63,6 +64,7 @@ def calc_stat_for_stock(stocks_with_prices, stock_code):
         avgs[i] /= len(stocks_with_prices)
 
     res = 0
+    logging.debug(f'diffs: {diffs}')
     for i, diff in enumerate(diffs[stock_code]):
         res += diff/avgs[i]
     res /= (days_cnt-1)
@@ -83,8 +85,7 @@ def respond_by_socket(address, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((address, int(port)))  # use address variable!
         s.sendall(b'1')
-        data = s.recv(1024)
-    logging.debug('Received' + ' ' +  repr(data))
+        logging.debug(f'send_to {address}:{int(port)}')
 
 
 def callback(ch, method, properties, body):
@@ -96,7 +97,7 @@ def callback(ch, method, properties, body):
 
 
     stocks = get_user_stocks(user)  # expecting list of stock codes ['AAPL', 'MSFT',..] or (better) string 'AAPL MSFT ..'
-
+    logging.debug(f'stocks callback: {stocks}')
     stocks_with_prices = get_prices_history(stocks)
 
     the_stat = calc_stat_for_stock(stocks_with_prices, stock_code)

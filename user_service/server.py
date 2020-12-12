@@ -112,7 +112,8 @@ class UserServicer(user_service_pb2_grpc.user_serviceServicer):
         cursor.execute(f"SELECT * from user_stock WHERE nick = '{request.user}'")
         ans = []
         for x in cursor.fetchall():
-            ans.append(x[1])
+            ans.append(x[2])
+        logging.debug(f"GET STOCKS nick = {request.user}; stocks: {ans}")
         cursor.close()
         conn.close()
         return user_service_pb2.StockAnswer(codes=ans)

@@ -5,8 +5,6 @@ require "user"
 require "error"
 require "statistic"
 
-set :show_exceptions, true if development?
-
 configure do
   set :protection, except: [:json_csrf]
 end
@@ -70,7 +68,7 @@ post "/api/user/login" do
   check_credentials request
   request.body.rewind
   body = JSON.parse(request.body.read)
-  logger.debug("Logging in #{body["name"]} with password #{body["password"]}")
+  LOGGER.debug("Logging in #{body["name"]} with password #{body["password"]}")
   u, t = User.login(body["name"], body["password"])
   {
     success: true,
@@ -84,7 +82,7 @@ post "/api/user/signup" do
   check_credentials request
   request.body.rewind
   body = JSON.parse(request.body.read)
-  logger.debug("Signing up #{body["name"]} with password #{body["password"]}")
+  LOGGER.debug("Signing up #{body["name"]} with password #{body["password"]}")
   u, t = User.signup body["name"], body["password"]
   [
     201,
@@ -126,7 +124,7 @@ end
 
 post "/api/stock/buy" do
   check_for_code request
-  logger.debug("Buying #{params["code"]}")
+  LOGGER.debug("Buying #{params["code"]}")
   u = User.authenticate request.cookies["token"]
   if !u.nil?
     u.buy(params["code"])
@@ -168,7 +166,7 @@ error InvalidCredentialsError do
     {
       success: false,
       reason: "username of password incorrect"
-    }
+    }.to_json
   ]
 end
 
@@ -178,12 +176,11 @@ error UserExistsError do
     {
       success: false,
       reason: "user exists"
-    }
+    }.to_json
   ]
 end
 
 error BadTokenError do
-  logger.debug("Handling BadTokenError")
   [
     200,
     {

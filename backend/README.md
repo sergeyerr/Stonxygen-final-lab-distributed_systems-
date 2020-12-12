@@ -23,6 +23,7 @@ ruby bin/serve.rb -e production -p <порт>
 * `REDIS`: адрес экземпляра-мастера Redis,
 * `REDIS_SENTINEL`: адрес для обнаружения экземлпяров Redis Sentinel,
 * `RABBITMQ`: адрес системы очередей сообщений RabbitMQ,
+* `SOCKET_TIMEOUT`: время ожидания ответа от StatisticService
 * `AUTH_SERVICE`: адрес сервиса аутентификация,
 * `USER_SERVICE`: адрес сервиса учёта пользователей.
 

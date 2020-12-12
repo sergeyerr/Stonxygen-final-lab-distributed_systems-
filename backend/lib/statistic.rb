@@ -26,7 +26,7 @@ class StatRequest
   end
 
   def perform
-    socket = TCPServer.new("localhost", 0)
+    socket = TCPServer.new("0.0.0.0", 0)
     port = socket.addr[1]
     q = @channel.queue("statistic-queue")
 
@@ -37,7 +37,7 @@ class StatRequest
       port: port
     }.to_json
 
-    @exchange.publish(message, routing_key: q.name, expiration: "3000")
+    @exchange.publish(message, routing_key: q.name, expiration: 10000)
     LOGGER.debug(
       "Awaiting response to the sent message with socket on port #{port}..."
     )
@@ -52,22 +52,23 @@ class StatRequest
   private
 
   def wait_for_response(socket)
-    Timeout.timeout(5) do
+    b = ""
+    Timeout.timeout(Env::SOCKET_TIMEOUT.to_i) do
       s = socket.accept
       b = s.recv(1)
-      if b == "1"
-        LOGGER.debug("Received statistic from service...")
-        st = Stock.statistic(@username, @code)
-        if st.nil?
-          raise CommunicationError.new(
-            "The requested statistic was not found in the store"
-          )
-        else
-          st
-        end
-      elsif b == "0"
-        raise CommunicationError.new("The statistic service failed")
+    end
+    if b == "1"
+      LOGGER.debug("Received statistic from service...")
+      st = Stock.statistic(@username, @code)
+      if st.nil?
+        raise CommunicationError.new(
+          "The requested statistic was not found in the store"
+        )
+      else
+        st
       end
+    elsif b == "0"
+      raise CommunicationError.new("The statistic service failed")
     end
   end
 end

@@ -8,7 +8,7 @@
     import { user } from "../../lib/user.js";
     import { writable } from 'svelte/store';
 
-    let showErrorMessage = false;
+    let showError = false;
     let error = null;
 
     let knownStatistics = writable({});
@@ -18,22 +18,23 @@
             .then(() => $user = $user)
             .catch(e => {
                 error = e;
-                showErrorMessage = true;
+                showError = true;
             })
     }
 
     function fetchStatistic(item) {
+        console.log(`Fetching the statistic for ${item.code}`);
         if ($knownStatistics[item.code] != '...') {
             $knownStatistics[item.code] = '...';
             item.statistic()
                 .then(response => {
-                    s = parseFloat(response.statistic).toFixed(2)
+                    const s = parseFloat(response.statistic).toFixed(2)
                     $knownStatistics[item.code] = s;
                 })
                 .catch(e => {
                     $knownStatistics[item.code] = '?';
                     error = e;
-                    showErrorMessage = true;
+                    showError = true;
                 })
         }
     }
@@ -51,13 +52,17 @@
     });
 </script>
 
-<Snackbar color="alert" top bind:value={showErrorMessage}>
-    <p>
-        {error.message}
-        {#if error.code != null}
-            {error.code}
-        {/if}
-    </p>
+<Snackbar color="alert" top bind:value={showError}>
+    {#if error != null}
+        <p>
+            {error.message}
+            {#if error.code != null}
+                {error.code}
+            {/if}
+        </p>
+    {:else}
+        <p>Actually everything seems fine</p>
+    {/if}
 </Snackbar>
 
 <div class="flex mx-auto flex-col items-center">
