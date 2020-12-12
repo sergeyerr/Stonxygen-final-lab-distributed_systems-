@@ -5,6 +5,10 @@ require "user"
 require "error"
 require "statistic"
 
+configure do
+  set :protection, except: [:json_csrf]
+end
+
 before do
   content_type :json
 end
@@ -155,6 +159,7 @@ get "/api/stock/statistic" do
 end
 
 error BadTokenError do
+  logger.debug("Handling BadTokenError")
   [
     200,
     {

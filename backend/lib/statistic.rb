@@ -6,7 +6,7 @@ require "socket"
 require "timeout"
 require "logs"
 
-CONN = Bunny.new("amqp://rabbit:rabbit@#{Env::RABBITMQ}:5672")
+CONN = Bunny.new("amqp://guest:guest@#{Env::RABBITMQ}:5672")
 CONN.start
 
 class StatRequest
