@@ -2,10 +2,14 @@ import grpc
 import time
 import logging
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from psycopg2.errors import UniqueViolation, ForeignKeyViolation
+from psycopg2.errors import UniqueViolation, ForeignKeyViolation, InterfaceError
 import psycopg2
 from concurrent import futures
 from os import getenv
+import logging
+import sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 import user_service_pb2_grpc
 import user_service_pb2
@@ -61,43 +65,68 @@ def init_db(reinit=False):
 class UserServicer(user_service_pb2_grpc.user_serviceServicer):
     def __init__(self):
         init_db(reinit_db)
-        self.conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
-        self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-        self.cursor = self.conn.cursor()
 
     def AddStockToUser(self, request, context):
+        conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
         stock = request.stock_code.upper()
         user = request.user
         try:
-            self.cursor.execute(f"INSERT INTO user_stock(nick, code) VALUES ('{user}','{stock}')")
+            logging.debug(f"INSERT INTO user_stock(nick, code) VALUES ('{user}','{stock}')")
+            cursor.execute(f"INSERT INTO user_stock(nick, code) VALUES ('{user}','{stock}')")
+            cursor.close()
+            conn.close()
             return user_service_pb2.OkAnswer(ok_code=1)
         except UniqueViolation:
             context.set_details('already added stock')
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            cursor.close()
+            conn.close()
             return user_service_pb2.OkAnswer()
         except ForeignKeyViolation:
             context.set_details('user or stock are not presented')
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            cursor.close()
+            conn.close()
             return user_service_pb2.OkAnswer()
 
+
     def RemoveStockFromUser(self, request, context):
+        conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
         stock = request.stock_code.upper()
         user = request.user
-        self.cursor.execute(f"DELETE FROM user_stock WHERE nick='{user}' AND code='{stock}'")
+        logging.debug(f"DELETE FROM user_stock WHERE nick='{user}' AND code='{stock}'")
+        cursor.execute(f"DELETE FROM user_stock WHERE nick='{user}' AND code='{stock}'")
+        cursor.close()
+        conn.close()
         return user_service_pb2.OkAnswer(ok_code=1)
 
     def GetStocks(self, request, context):
-        self.cursor.execute(f"SELECT code from user_stock WHERE nick = '{request.user}'")
+        conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
+        logging.debug(f"SELECT code from user_stock WHERE nick = '{request.user}'")
+        cursor.execute(f"SELECT code from user_stock WHERE nick = '{request.user}'")
         ans = []
-        for x in self.cursor.fetchall():
+        for x in cursor.fetchall():
             ans.append(x[0])
+        cursor.close()
+        conn.close()
         return user_service_pb2.StockAnswer(codes=ans)
 
     def GetAllStocks(self, request, context):
-        self.cursor.execute('SELECT * from stocks')
+        conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
+        cursor.execute('SELECT * from stocks')
         ans = []
-        for x in self.cursor.fetchall():
+        for x in cursor.fetchall():
             ans.append(x[0])
+        cursor.close()
+        conn.close()
         return user_service_pb2.StockAnswer(codes=ans)
 
 
