@@ -63,6 +63,7 @@ def calc_stat_for_stock(stocks_with_prices, stock_code):
         avgs[i] /= len(stocks_with_prices)
 
     res = 0
+    logging.debug(f'diffs: {diffs}')
     for i, diff in enumerate(diffs[stock_code]):
         res += diff/avgs[i]
     res /= (days_cnt-1)
