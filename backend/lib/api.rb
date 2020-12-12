@@ -160,6 +160,27 @@ get "/api/stock/statistic" do
   end
 end
 
+
+error InvalidCredentialsError do
+  [
+    200,
+    {
+      success: false,
+      reason: "username of password incorrect"
+    }
+  ]
+end
+
+error UserExistsError do
+  [
+    200,
+    {
+      success: false,
+      reason: "user exists"
+    }
+  ]
+end
+
 error BadTokenError do
   logger.debug("Handling BadTokenError")
   [

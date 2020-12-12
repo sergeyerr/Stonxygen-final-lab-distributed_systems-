@@ -2,6 +2,7 @@ require "rpc/user_service_services_pb"
 require "rpc/auth_services_pb"
 require "logs"
 require "env"
+require "error"
 require "stock"
 
 USER = UserService::UserService::Stub.new(
@@ -45,11 +46,15 @@ class User
   def self.login(name, password)
     LOGGER.debug("Logging user in...")
     request = AuthService::UserPasswordRequest.new(user: name, password: password)
-    response = AUTH.get_token(request)
-    token = response.token
-    stocks = self.stocks(name)
+    begin
+      response = AUTH.get_token(request)
+      token = response.token
+      stocks = self.stocks(name)
 
-    [User.new(name, stocks), token]
+      [User.new(name, stocks), token]
+    rescue GRPC::InvalidArgument
+      raise InvalidCredentialsError.new "Username or password invalid"
+    end
   end
 
   def self.authenticate(token)
@@ -71,8 +76,15 @@ class User
       user: name,
       password: password
     )
-    response = AUTH.register_user(request)
-    [User.new(name, []), response.token]
+    begin
+      response = AUTH.register_user(request)
+      [User.new(name, []), response.token]
+    rescue
+      raise UserExistsError.new(
+        "The user with the specified " \
+        "name already exists"
+      )
+    end
   end
 
   def to_json(*options)
