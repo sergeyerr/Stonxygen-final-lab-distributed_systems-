@@ -8,6 +8,7 @@ import socket
 import user_service_pb2
 import user_service_pb2_grpc
 from os import getenv
+from redis.sentinel import Sentinel
 
 import logging
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -97,7 +98,7 @@ def callback(ch, method, properties, body):
 
 
     stocks = get_user_stocks(user)  # expecting list of stock codes ['AAPL', 'MSFT',..] or (better) string 'AAPL MSFT ..'
-
+    logging.debug(f'stocks callback: {stocks}')
     stocks_with_prices = get_prices_history(stocks)
 
     the_stat = calc_stat_for_stock(stocks_with_prices, stock_code)
