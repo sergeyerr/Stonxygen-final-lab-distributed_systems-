@@ -20,7 +20,7 @@ class StatRequest
   def perform
     socket = TCPServer.new("localhost", 0)
     port = socket.addr[1]
-    q = @channel.queue("statistic-queue", auto_delete: true)
+    q = @channel.queue("statistic-queue")
 
     message = {
       user: @username,
