@@ -26,7 +26,7 @@ class StatRequest
   end
 
   def perform
-    socket = TCPServer.new("localhost", 0)
+    socket = TCPServer.new("0.0.0.0", 0)
     port = socket.addr[1]
     q = @channel.queue("statistic-queue")
 
