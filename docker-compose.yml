@@ -56,6 +56,7 @@ services:
      - FINANCE_API=finance_api
     depends_on:
      - redis
+     - finance_api
   
   stats_calculator:
     image: sergeyer/trrp_stats_calculator:latest
