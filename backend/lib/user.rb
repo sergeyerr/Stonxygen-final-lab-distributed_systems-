@@ -83,6 +83,7 @@ class User
     LOGGER.debug("Getting user stocks...")
     request = UserService::GetUserStocksRequest.new(user: name)
     response = USER.get_stocks(request)
+    LOGGER.debug("User #{name} has #{response.stocks.length} stocks")
     response.codes.map { |code| Stock.new(code, "", 0) }
   end
 
