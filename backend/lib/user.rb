@@ -26,10 +26,10 @@ AUTH = AuthService::Auth::Stub.new(
 class User
   def initialize(name, stocks)
     @name = name
-    @stocks = []
+    @stocks = stocks
   end
 
-  attr_reader :name
+  attr_reader :name, :stocks
 
   def buy(code)
     LOGGER.debug("Buying #{code}...")
@@ -103,7 +103,6 @@ class User
     LOGGER.debug("Getting user stocks...")
     request = UserService::GetUserStocksRequest.new(user: name)
     response = USER.get_stocks(request)
-    LOGGER.debug("User #{name} has #{response.codes.length} stocks...")
     if response.codes.length > 0
       Stock.with_codes(response.codes)
     else

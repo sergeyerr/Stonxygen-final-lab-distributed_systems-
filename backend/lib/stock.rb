@@ -1,6 +1,7 @@
 require "redis"
 require "error"
 require "env"
+require "logs"
 
 def redis
   if Env::REDIS == "localhost"
