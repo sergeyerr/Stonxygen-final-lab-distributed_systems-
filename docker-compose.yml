@@ -122,10 +122,9 @@ services:
     networks:
       - postgres_network
     deploy:
-      mode: global
       placement: 
-       preferences: 
-       - spread: node.labels.pg_0
+       constraints: 
+       - "node.labels.postgres==pg_0"
   pg-1:
     image: bitnami/postgresql-repmgr:11
     volumes:
@@ -143,10 +142,9 @@ services:
     networks:
       - postgres_network
     deploy:
-      mode: global
       placement: 
-       preferences: 
-       - spread: node.labels.pg_1
+       constraints: 
+       - "node.labels.postgres==pg_1"
   pg-2:
     image: bitnami/postgresql-repmgr:11
     volumes:
@@ -164,10 +162,9 @@ services:
     networks:
       - postgres_network
     deploy:
-      mode: global
       placement: 
-       preferences: 
-       - spread: node.labels.pg_2
+       constraints: 
+       - "node.labels.postgres==pg_2"
       
   postgres:
     image: bitnami/pgpool:4
