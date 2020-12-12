@@ -2,7 +2,7 @@ import grpc
 import time
 import logging
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from psycopg2.errors import UniqueViolation, ForeignKeyViolation, InterfaceError
+from psycopg2.errors import UniqueViolation, ForeignKeyViolation, InterfaceError, ReadOnlySqlTransaction
 import psycopg2
 from concurrent import futures
 from os import getenv
@@ -15,7 +15,7 @@ import user_service_pb2_grpc
 import user_service_pb2
 
 host = getenv('POSTGRES_CONNECTION', 'localhost')
-stock_list_loc = getenv('STOCK_LIST_LOCATION',  'stocks_list.csv')
+stock_list_loc = getenv('STOCK_LIST_LOCATION', 'stocks_list.csv')
 reinit_db = bool(getenv('REINIT_DB', False))
 
 
@@ -23,44 +23,48 @@ def init_db(reinit=False):
     con = psycopg2.connect(host=host, user='postgres', password='postgres');
     con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = con.cursor();
-    if reinit:
-        logging.info('droping db')
-        cursor.execute("DROP DATABASE IF EXISTS stocks;")
-    cursor.execute("SELECT datname FROM pg_database WHERE datname = %s;", ('stocks',))
-    if len(cursor.fetchall()) == 0:
-        sqlCreateDB = f"create database stocks;"
-        cursor.execute(sqlCreateDB)
-    cursor.close();
-    con.close()
+    try:
+        if reinit:
+            logging.info('droping db')
+            cursor.execute("DROP DATABASE IF EXISTS stocks;")
+        cursor.execute("SELECT datname FROM pg_database WHERE datname = %s;", ('stocks',))
+        if len(cursor.fetchall()) == 0:
+            sqlCreateDB = f"create database stocks;"
+            cursor.execute(sqlCreateDB)
+        cursor.close();
+        con.close()
 
-    con = psycopg2.connect(dbname='stocks',host=host, user='postgres', password='postgres');
-    con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cursor = con.cursor();
-    logging.info('creating tables')
-    sqlCreateTableUser = "CREATE TABLE IF NOT EXISTS users(nick VARCHAR(256) PRIMARY KEY, hash VARCHAR(512) NOT NULL, token VARCHAR(512) NOT NULL, token_date timestamp NOT NULL);"
-    sqlCreateTableStock = "CREATE TABLE IF NOT EXISTS stocks(code VARCHAR(10) PRIMARY KEY);"
-    sqlCreateTableUserStock = '''CREATE TABLE IF NOT EXISTS
-    user_stock (
-    id serial PRIMARY KEY,
-    nick VARCHAR (256) NOT NULL,
-    code VARCHAR (10) NOT NULL,
-    FOREIGN KEY (nick) REFERENCES users (nick),
-    FOREIGN KEY (code) REFERENCES stocks (code),
-    UNIQUE (nick, code)
-    );
-    '''
-    for query in [sqlCreateTableUser, sqlCreateTableStock, sqlCreateTableUserStock]:
-        cursor.execute(query)
-    cursor.execute('select COUNT(*) from stocks')
-    if cursor.fetchone()[0] == 0:
-        logging.info('inserting stocks')
-        with open(stock_list_loc, 'r') as f:
-            for s in f:
-                cursor.execute(f"INSERT INTO stocks VALUES ('{s.strip()}')")
-    else:
-        logging.info('stocks already presented')
+        con = psycopg2.connect(dbname='stocks', host=host, user='postgres', password='postgres');
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = con.cursor()
+        logging.info('creating tables')
+        sqlCreateTableUser = "CREATE TABLE IF NOT EXISTS users(nick VARCHAR(256) PRIMARY KEY, hash VARCHAR(512) NOT NULL, token VARCHAR(512) NOT NULL, token_date timestamp NOT NULL);"
+        sqlCreateTableStock = "CREATE TABLE IF NOT EXISTS stocks(code VARCHAR(10) PRIMARY KEY);"
+        sqlCreateTableUserStock = '''CREATE TABLE IF NOT EXISTS
+        user_stock (
+        id serial PRIMARY KEY,
+        nick VARCHAR (256) NOT NULL,
+        code VARCHAR (10) NOT NULL,
+        FOREIGN KEY (nick) REFERENCES users (nick),
+        FOREIGN KEY (code) REFERENCES stocks (code),
+        UNIQUE (nick, code)
+        );
+        '''
+        for query in [sqlCreateTableUser, sqlCreateTableStock, sqlCreateTableUserStock]:
+            cursor.execute(query)
+        cursor.execute('select COUNT(*) from stocks')
+        if cursor.fetchone()[0] == 0:
+            logging.info('inserting stocks')
+            with open(stock_list_loc, 'r') as f:
+                for s in f:
+                    cursor.execute(f"INSERT INTO stocks VALUES ('{s.strip()}')")
+        else:
+            logging.info('stocks already presented')
+    except ReadOnlySqlTransaction:
+        logging.warning('failed to reinit db')
     cursor.close()
     con.close()
+
 
 class UserServicer(user_service_pb2_grpc.user_serviceServicer):
     def __init__(self):
@@ -90,7 +94,6 @@ class UserServicer(user_service_pb2_grpc.user_serviceServicer):
             cursor.close()
             conn.close()
             return user_service_pb2.OkAnswer()
-
 
     def RemoveStockFromUser(self, request, context):
         conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')

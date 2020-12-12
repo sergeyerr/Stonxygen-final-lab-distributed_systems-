@@ -20,7 +20,7 @@ else:
 
 def update_stocks(stub):
     for stock in stub.get_stocks(Finance_API_pb2.Get_stocks_request()):
-        redis_conn.hset('Stocks', stock.code, stock.name)  # надо решить, где хранить константный список акций (сейчас он в Finance_API.py)
+        redis_conn.hset('Stocks', stock.code, stock.name) 
         redis_conn.set(stock.code, stock.price[0])
         print(stock.name + " " + stock.code + " " + str(stock.price))
 

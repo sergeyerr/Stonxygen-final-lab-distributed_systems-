@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 networks:
   postgres_network:
     driver: overlay
@@ -9,13 +9,13 @@ networks:
   services_network:
     driver: overlay
 
-#volumes:
- # pg_0_data:
-   # driver: local
- # pg_1_data:
- #   driver: local
- # pg_2_data:
-   # driver: local
+volumes:
+  pg_0_data:
+    driver: local
+  pg_1_data:
+    driver: local
+  pg_2_data:
+    driver: local
     
 services:
   backend:
@@ -53,7 +53,7 @@ services:
      - services_network
      - redis_network
     environment:
-     - UPDATE_FREQUENCY=30
+     - UPDATE_FREQUENCY=5
      - FINANCE_API=finance_api
     depends_on:
      - redis
@@ -107,8 +107,8 @@ services:
   
   pg-0:
     image: bitnami/postgresql-repmgr:11
-  #  volumes:
-    #  - pg_0_data:/bitnami/postgresql
+    volumes:
+      - pg_0_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_POSTGRES_PASSWORD=postgres
       - POSTGRESQL_USERNAME=postgres
@@ -121,10 +121,15 @@ services:
       - REPMGR_NODE_NETWORK_NAME=pg-0
     networks:
       - postgres_network
+    deploy:
+      mode: global
+      placement: 
+       preferences: 
+       - spread: node.labels.pg_0
   pg-1:
     image: bitnami/postgresql-repmgr:11
-  #  volumes:
-    #  - pg_1_data:/bitnami/postgresql
+    volumes:
+      - pg_1_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_POSTGRES_PASSWORD=postgres
       - POSTGRESQL_USERNAME=postgres
@@ -137,10 +142,15 @@ services:
       - REPMGR_NODE_NETWORK_NAME=pg-1
     networks:
       - postgres_network
+    deploy:
+      mode: global
+      placement: 
+       preferences: 
+       - spread: node.labels.pg_1
   pg-2:
     image: bitnami/postgresql-repmgr:11
-   # volumes:
-   #   - pg_2_data:/bitnami/postgresql
+    volumes:
+      - pg_2_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_POSTGRES_PASSWORD=postgres
       - POSTGRESQL_USERNAME=postgres
@@ -153,6 +163,11 @@ services:
       - REPMGR_NODE_NETWORK_NAME=pg-2
     networks:
       - postgres_network
+    deploy:
+      mode: global
+      placement: 
+       preferences: 
+       - spread: node.labels.pg_2
       
   postgres:
     image: bitnami/pgpool:4
@@ -204,6 +219,8 @@ services:
       - redis
     deploy:
       replicas: 3
+      placement:
+        max_replicas_per_node: 1
     networks:
       - redis_network
   redis-sentinel:
@@ -217,6 +234,8 @@ services:
       - redis_network
     deploy:
       replicas: 3
+      placement:
+        max_replicas_per_node: 1
   
   
   
