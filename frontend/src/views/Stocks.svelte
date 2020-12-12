@@ -1,6 +1,6 @@
 <script>
     import Stock from "../../lib/stock.js";
-    import ProgressCircular from 'smelte/src/components/ProgressCircular';
+    import ProgressCircular from "smelte/src/components/ProgressCircular";
     import Snackbar from "smelte/src/components/Snackbar";
     import { user } from "../../lib/user.js";
     import { navigate, link } from "svelte-routing";
@@ -8,52 +8,56 @@
     import Button from "smelte/src/components/Button";
     import Icon from "smelte/src/components/Icon";
     import { onMount } from "svelte";
-    import { fade } from 'svelte/transition';
+    import { fade } from "svelte/transition";
 
     let items = [];
     let itemsPromise = null;
-    let showErrorMessage = false;
+    let showError = false;
     let error = null;
 
     function grabStock(stock) {
         if ($user.name != null) {
-            $user.buyStock(stock)
+            $user
+                .buyStock(stock)
                 .then(() => {
                     $user = $user;
                 })
-                .catch(e => {
+                .catch((e) => {
                     error = e;
-                    showErrorMessage = true;
-                })
+                    showError = true;
+                });
             return true;
         } else {
-            navigate('/signup');
+            navigate("/signup");
             return false;
         }
     }
 
     function reloadStocks() {
-        itemsPromise = Stock.allAvailable()
-            .then(stocks => {
-                items = stocks.map(s => ({
-                    icon: "work",
-                    stock: s
-                }));
-            })
+        itemsPromise = Stock.allAvailable().then((stocks) => {
+            items = stocks.map((s) => ({
+                icon: "work",
+                stock: s,
+            }));
+        });
     }
-    
+
     onMount(() => {
         reloadStocks();
-    })
+    });
 </script>
 
-<Snackbar color="alert" top bind:value={showErrorMessage}>
-    <p>
-        {error.message}
-        {#if error.code != null}
-            {error.code}
-        {/if}
-    </p>
+<Snackbar color="alert" top value={showError}>
+    {#if error != null}
+        <p>
+            {error.message}
+            {#if error.code != null}
+                {error.code}
+            {/if}
+        </p>
+    {:else}
+        <p>Actually everything seems fine</p>
+    {/if}
 </Snackbar>
 
 <div class="flex flex-col m-auto w-1/2">
@@ -63,7 +67,9 @@
     </div>
 
     {#await itemsPromise}
-        <div class="mx-auto"><ProgressCircular/></div>
+        <div class="mx-auto">
+            <ProgressCircular />
+        </div>
     {:then}
         <div in:fade class="flex flex-col">
             <List {items}>
@@ -76,18 +82,26 @@
                             <div>{item.stock.code}</div>
                         </div>
                         <div class="my-auto">{item.stock.organization}</div>
-    
+
                         <div class="flex items-center">
-                            {#if !$user.selectedStocks.map((s) => s.code).includes(item.stock.code)}
+                            {#if !$user.selectedStocks
+                                .map((s) => s.code)
+                                .includes(item.stock.code)}
                                 <Button
-                                    small flat outlined
+                                    small
+                                    flat
+                                    outlined
                                     add="w-32 h-8"
                                     on:click={grabStock(item.stock)}>
                                     ${item.stock.price}
                                 </Button>
                             {:else}
-                                <Button small flat outlined add="w-32"
-                                on:click={() => navigate("/suitcase")}>
+                                <Button
+                                    small
+                                    flat
+                                    outlined
+                                    add="w-32"
+                                    on:click={() => navigate('/suitcase')}>
                                     View in Suitcase
                                 </Button>
                             {/if}
@@ -98,8 +112,8 @@
         </div>
     {:catch error}
         <p in:fade class="mx-auto mb-4">
-            No actual <i>stonks</i>, just an error message:
-            "{error.message}"
+            No actual
+            <i>stonks</i>, just an error message: "{error.message}"
         </p>
         <div in:fade class="w-64 mx-auto">
             <Button block on:click={reloadStocks}>Retry</Button>

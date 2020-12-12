@@ -1,8 +1,8 @@
 import timeout from './timeout';
-import { StatusError, ResponseError } from './error';
+import {StatusError, ResponseError} from './error';
 
 export const DEFAULT_TIMEOUT = 3000;
-export const API = new URL(document.URL).origin + '/api';
+export const API = '/api';
 
 export function sieve(fetchPromise) {
     return fetchPromise
