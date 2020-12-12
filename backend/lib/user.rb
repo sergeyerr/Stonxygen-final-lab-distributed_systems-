@@ -5,13 +5,21 @@ require "env"
 require "error"
 require "stock"
 
+if Env::HOSTNAME == "localhost"
+  PORT_A = 50001
+  PORT_B = 50000
+else
+  PORT_A = 50051
+  PORT_B = 50051
+end
+
 USER = UserService::UserService::Stub.new(
-  "#{Env::USER_SERVICE}:50051",
+  "#{Env::USER_SERVICE}:#{PORT_A}",
   :this_channel_is_insecure
 )
 
 AUTH = AuthService::Auth::Stub.new(
-  "#{Env::AUTH_SERVICE}:50051",
+  "#{Env::AUTH_SERVICE}:#{PORT_B}",
   :this_channel_is_insecure
 )
 
