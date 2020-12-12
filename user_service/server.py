@@ -109,10 +109,10 @@ class UserServicer(user_service_pb2_grpc.user_serviceServicer):
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = conn.cursor()
         logging.debug(f"SELECT code from user_stock WHERE nick = '{request.user}'")
-        cursor.execute(f"SELECT code from user_stock WHERE nick = '{request.user}'")
+        cursor.execute(f"SELECT * from user_stock WHERE nick = '{request.user}'")
         ans = []
         for x in cursor.fetchall():
-            ans.append(x[0])
+            ans.append(x[1])
         cursor.close()
         conn.close()
         return user_service_pb2.StockAnswer(codes=ans)
