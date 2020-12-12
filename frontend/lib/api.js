@@ -1,5 +1,5 @@
 import timeout from './timeout';
-import { APIError, StatusError, ResponseError } from './error';
+import { StatusError, ResponseError } from './error';
 
 export const DEFAULT_TIMEOUT = 3000;
 export const API = new URL(document.URL).origin + '/api';

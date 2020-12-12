@@ -24,45 +24,42 @@ export class User {
     }
 
     async buyStock(stock) {
-        console.debug(`${user.name} buys ${stock.code}`);
-        return timeout(
+        console.debug(`${this.name} buys ${stock.code}`);
+        return sieve(timeout(
             DEFAULT_TIMEOUT,
-            sieve(
-                fetch(
-                    API + `/stock/buy?code="${stock.code}"`,
-                    { method: "POST" }
-                )
-            )
+            fetch(
+                API + `/stock/buy?code="${stock.code}"`,
+                { method: "POST" }
+            )))
                 .then(response => {
                     if (response.success) {
+                        console.debug(`Stock ${stock} bought`);
                         this.selectedStocks.push(stock);
                         return response;
                     } else {
-                        throw new ResponseError(response.message);
+                        console.debug(`Failed to buy ${stock}`);
+                        console.debug(response);
+                        throw new ResponseError(response.reason);
                     }
-                })
-        );
+                });
     }
 
     async sellStock(stock) {
-        console.debug(`${user.name} sells ${stock.code}`);
-        return timeout(
+        console.debug(`${this.name} sells ${stock.code}`);
+        return sieve(timeout(
             DEFAULT_TIMEOUT,
-            sieve(
-                fetch(
-                    API + `/stock/sell?code="${stock.code}"`,
-                    { method: "POST" }
-                )
-            )
+            fetch(
+                API + `/stock/sell?code="${stock.code}"`,
+                { method: "POST" }
+            )))
                 .then(response => {
                     if (response.success) {
                         this.selectedStocks =
                             this.selectedStocks.filter(s => s.code != stock.code);
                     } else {
-                        throw new ResponseError(response.message);
+                        throw new ResponseError(response.reason);
                     }
                 })
-        )
     }
 
     static async signup(name, password) {
@@ -109,7 +106,8 @@ export class User {
     }
 
     static async authenticate() {
-        return timeout(DEFAULT_TIMEOUT, sieve(fetch(API + `/user/info`)))
+        console.debug('Authenticating user...');
+        return sieve(timeout(DEFAULT_TIMEOUT, fetch(API + `/user/info`)))
             .then(response => new User(
                 response.user.name, 
                 {
@@ -124,10 +122,13 @@ export class User {
 export const user = writable(User.default);
 export const userPromise = User.authenticate()
     .then(u => {
+        console.debug(u);
         user.update(() => u);
         return u;
     })
     .catch(error => {
+        console.debug('Caught error...')
+        console.debug(error);
         if (error.message != 'bad user token') {
             throw error;
         }

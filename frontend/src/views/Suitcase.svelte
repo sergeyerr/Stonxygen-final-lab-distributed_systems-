@@ -7,9 +7,12 @@
     import { flip } from 'svelte/animate';
     import { onMount } from "svelte";
     import { user } from "../../lib/user.js";
+    import { writable } from 'svelte/store';
 
     let showErrorMessage = false;
     let error = null;
+
+    let knownStatistics = writable({});
 
     function sellStock(item) {
         $user.sellStock(item)
@@ -21,12 +24,13 @@
     }
 
     function fetchStatistic(item) {
-        item.statisticValue = '...';
+        $knownStatistics[item.code] = '...';
         item.statistic()
             .then(response => {
-                item.statisticValue = response.statistic;
+                $knownStatistics[item.code] = response.statistic;
             })
             .catch(e => {
+                $knownStatistics[item.code] = '?';
                 error = e;
                 showErrorMessage = true;
             })
@@ -84,7 +88,13 @@
                         </div>
                         <div slot="text" class="px-4 pb-0 pt-0 text-right">
                             <span class="mr-8">${item.price}</span>
-                            <span>VAR {item.statisticValue}</span>
+                            <span>VAR
+                                {#if $knownStatistics[item.code] == null}
+                                    ?
+                                {:else}
+                                    {$knownStatistics[item.code]}
+                                {/if}
+                            </span>
                         </div>
                         <div slot="actions" class="flex justify-center">
                             <div class="p-2">

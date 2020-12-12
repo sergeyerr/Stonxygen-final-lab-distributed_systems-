@@ -6,7 +6,6 @@ export default class Stock {
         this.code = code;
         this.price = price;
         this.organization = organization;
-        this.statisticValue = "?"
     }
 
     static allAvailable() {
