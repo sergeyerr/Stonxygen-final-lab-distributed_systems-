@@ -85,8 +85,7 @@ def respond_by_socket(address, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((address, int(port)))  # use address variable!
         s.sendall(b'1')
-        data = s.recv(1024)
-    logging.debug('Received' + ' ' +  repr(data))
+        logging.debug(f'send_to {address}:{int(port)}')
 
 
 def callback(ch, method, properties, body):
