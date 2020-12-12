@@ -53,7 +53,7 @@ class StatRequest
 
   def wait_for_response(socket)
     b = ""
-    Timeout.timeout(5) do
+    Timeout.timeout(Env::SOCKET_TIMEOUT.to_i) do
       s = socket.accept
       b = s.recv(1)
     end
