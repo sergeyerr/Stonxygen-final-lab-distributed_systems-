@@ -83,7 +83,7 @@ class User
     LOGGER.debug("Getting user stocks...")
     request = UserService::GetUserStocksRequest.new(user: name)
     response = USER.get_stocks(request)
-    LOGGER.debug("User #{name} has #{response.codes.length} stocks")
+    LOGGER.debug("User #{name} has #{response.codes.length} stocks...")
     if response.codes.length > 0
       Stock.with_codes(response.codes)
     else

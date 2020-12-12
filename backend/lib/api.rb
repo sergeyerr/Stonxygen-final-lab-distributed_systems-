@@ -14,7 +14,7 @@ before do
 end
 
 get "/api/ping" do
-  {success: true, reason: ""}
+  {success: true, reason: ""}.to_json
 end
 
 get "/api/stock/list" do
@@ -68,6 +68,7 @@ post "/api/user/login" do
   check_credentials request
   request.body.rewind
   body = JSON.parse(request.body.read)
+  logger.debug("Logging in #{body["name"]} with password #{body["password"]}")
   u, t = User.login(body["name"], body["password"])
   {
     success: true,
@@ -81,6 +82,7 @@ post "/api/user/signup" do
   check_credentials request
   request.body.rewind
   body = JSON.parse(request.body.read)
+  logger.debug("Signing up #{body["name"]} with password #{body["password"]}")
   u, t = User.signup body["name"], body["password"]
   [
     201,
