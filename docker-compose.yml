@@ -31,7 +31,7 @@ services:
      - rabbit
      - auth
     environment:
-     - MY_HOSTNAME='{{.Task.Name}}'
+     - MY_HOSTNAME={{.Task.Name}}
      - REDIS=mymaster
      - REDIS_SENTINEL=redis-sentinel
      - RABBITMQ=rabbit
