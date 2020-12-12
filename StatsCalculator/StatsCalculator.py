@@ -9,6 +9,9 @@ import user_service_pb2
 import user_service_pb2_grpc
 from os import getenv
 
+import logging
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
 stat_expiration_time = getenv('STAT_EXPIRATION_TIME', '30')
 user_service_host = getenv('USER_SERVICE', 'localhost')
 finance_api_host = getenv('FINANCE_API', 'localhost')
@@ -72,15 +75,16 @@ def save_to_redis(user, stock_code, the_stat):
     else:
         sentinel = Sentinel([('redis-sentinel', '26379')], socket_timeout=0.1)
         redis_conn = sentinel.master_for('mymaster', socket_timeout=0.1, password='redis')
+    logging.debug(f'saving to redis: {user + "_" + stock_code}:{the_stat}')
     redis_conn.set(user + "_" + stock_code, the_stat, ex=int(stat_expiration_time))
 
 
 def respond_by_socket(address, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((address, int(port)))  # use address variable!
-        s.sendall(b'Stat calculated and saved')
+        s.sendall(b'1')
         data = s.recv(1024)
-    print('Received', repr(data))
+    logging.debug('Received' + ' ' +  repr(data))
 
 
 def callback(ch, method, properties, body):
@@ -96,7 +100,7 @@ def callback(ch, method, properties, body):
     stocks_with_prices = get_prices_history(stocks)
 
     the_stat = calc_stat_for_stock(stocks_with_prices, stock_code)
-    print(the_stat)
+    logging.debug(the_stat)
     save_to_redis(user, stock_code, the_stat)
 
     respond_by_socket(address, port)
@@ -107,9 +111,9 @@ def main():
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, credentials=credentials))
     channel = connection.channel()
 
-    channel.queue_declare(queue='hello')
+    channel.queue_declare(queue='statistic-queue')
 
-    channel.basic_consume(queue='hello', on_message_callback=callback, auto_ack=True)
+    channel.basic_consume(queue='statistic-queue', on_message_callback=callback, auto_ack=True)
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()

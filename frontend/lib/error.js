@@ -7,3 +7,4 @@ export class StatusError extends APIError {
         this.code = code;
     }
 }
+export class ResponseError extends Error {}

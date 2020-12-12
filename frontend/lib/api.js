@@ -1,20 +1,35 @@
 import timeout from './timeout';
-import { APIError, StatusError, TimeoutError } from './error';
+import { StatusError, ResponseError } from './error';
 
 export const DEFAULT_TIMEOUT = 3000;
-export const API = new URL(document.URL) + '/api';
+export const API = new URL(document.URL).origin + '/api';
 
-export function moderateResponse(response) {
-    if (!response.ok) {
-        throw new StatusError('Server returned error status', response.status)
-    }
+export function sieve(fetchPromise) {
+    return fetchPromise
+        .then(response => {
+            console.debug('Fetch successful...');
+            const contentType = response.headers.get('content-type');
+            console.debug(`Content-Type received: ${contentType}`);
 
-    const contentType = response.headers.get('content-type')
-    if (!contentType.includes('application/json')) {
-        throw new APIError('Content Mismatch');
-    }
+            if (!response.ok) {
+                console.debug(`Response status code was ${response.status}`)
+                throw new StatusError(
+                    'Server returned error status',
+                    response.status
+                );
+            }
+            console.debug('Response passed safety checks...');
 
-    return response;
+            return response;
+        })
+        .then(response => response.json())
+        .then(body => {
+            if (body.success === false) {
+                throw new ResponseError(body.reason);
+            }
+
+            return body;
+        })
 }
 
 export async function ping() {

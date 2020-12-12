@@ -2,15 +2,16 @@ require "rpc/user_service_services_pb"
 require "rpc/auth_services_pb"
 require "logs"
 require "env"
+require "error"
 require "stock"
 
 USER = UserService::UserService::Stub.new(
-  "#{Env::USER_SERVICE}:50001",
+  "#{Env::USER_SERVICE}:50051",
   :this_channel_is_insecure
 )
 
 AUTH = AuthService::Auth::Stub.new(
-  "#{Env::AUTH_SERVICE}:50000",
+  "#{Env::AUTH_SERVICE}:50051",
   :this_channel_is_insecure
 )
 
@@ -45,22 +46,29 @@ class User
   def self.login(name, password)
     LOGGER.debug("Logging user in...")
     request = AuthService::UserPasswordRequest.new(user: name, password: password)
-    response = AUTH.get_token(request)
-    token = response.token
-    stocks = self.stocks(name)
+    begin
+      response = AUTH.get_token(request)
+      token = response.token
+      stocks = self.stocks(name)
 
-    [User.new(name, stocks), token]
+      [User.new(name, stocks), token]
+    rescue GRPC::InvalidArgument
+      raise InvalidCredentialsError.new "Username or password invalid"
+    end
   end
 
   def self.authenticate(token)
     LOGGER.debug("Authenticating user...")
     request = AuthService::CheckTokenRequest.new(token: token)
-    response = AUTH.check_token(request)
-    LOGGER.debug("User successfully authenticated...")
-    name = response.user
-    stocks = self.stocks(name)
-
-    User.new(name, stocks)
+    begin
+      response = AUTH.check_token(request)
+      LOGGER.debug("User successfully authenticated...")
+      name = response.user
+      stocks = self.stocks(name)
+      User.new(name, stocks)
+    rescue GRPC::InvalidArgument
+      raise BadTokenError.new
+    end
   end
 
   def self.signup(name, password)
@@ -68,8 +76,15 @@ class User
       user: name,
       password: password
     )
-    response = AUTH.register_user(request)
-    [User.new(name, []), response.token]
+    begin
+      response = AUTH.register_user(request)
+      [User.new(name, []), response.token]
+    rescue
+      raise UserExistsError.new(
+        "The user with the specified " \
+        "name already exists"
+      )
+    end
   end
 
   def to_json(*options)
@@ -80,7 +95,12 @@ class User
     LOGGER.debug("Getting user stocks...")
     request = UserService::GetUserStocksRequest.new(user: name)
     response = USER.get_stocks(request)
-    response.codes.map { |code| Stock.new(code, "", 0) }
+    LOGGER.debug("User #{name} has #{response.codes.length} stocks...")
+    if response.codes.length > 0
+      Stock.with_codes(response.codes)
+    else
+      []
+    end
   end
 
   private_class_method :stocks

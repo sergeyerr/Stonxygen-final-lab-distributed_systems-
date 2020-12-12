@@ -5,12 +5,18 @@ require "user"
 require "error"
 require "statistic"
 
+set :show_exceptions, true if development?
+
+configure do
+  set :protection, except: [:json_csrf]
+end
+
 before do
   content_type :json
 end
 
 get "/api/ping" do
-  {success: true, reason: ""}
+  {success: true, reason: ""}.to_json
 end
 
 get "/api/stock/list" do
@@ -64,6 +70,7 @@ post "/api/user/login" do
   check_credentials request
   request.body.rewind
   body = JSON.parse(request.body.read)
+  logger.debug("Logging in #{body["name"]} with password #{body["password"]}")
   u, t = User.login(body["name"], body["password"])
   {
     success: true,
@@ -77,6 +84,7 @@ post "/api/user/signup" do
   check_credentials request
   request.body.rewind
   body = JSON.parse(request.body.read)
+  logger.debug("Signing up #{body["name"]} with password #{body["password"]}")
   u, t = User.signup body["name"], body["password"]
   [
     201,
@@ -98,7 +106,7 @@ get "/api/user/info" do
       user: u
     }.to_json
   else
-    403
+    raise BadTokenError
   end
 end
 
@@ -152,6 +160,37 @@ get "/api/stock/statistic" do
   else
     403
   end
+end
+
+error InvalidCredentialsError do
+  [
+    200,
+    {
+      success: false,
+      reason: "username of password incorrect"
+    }
+  ]
+end
+
+error UserExistsError do
+  [
+    200,
+    {
+      success: false,
+      reason: "user exists"
+    }
+  ]
+end
+
+error BadTokenError do
+  logger.debug("Handling BadTokenError")
+  [
+    200,
+    {
+      success: false,
+      reason: "bad user token"
+    }.to_json
+  ]
 end
 
 error 403 do

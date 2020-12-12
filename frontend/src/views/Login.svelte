@@ -35,7 +35,7 @@
     <p>
         {error.message}
         {#if error.code != null}
-            error.code
+            {error.code}
         {/if}
     </p>
 </Snackbar>
