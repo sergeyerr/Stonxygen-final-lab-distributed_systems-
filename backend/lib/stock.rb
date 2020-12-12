@@ -48,11 +48,7 @@ class Stock
   def self.statistic(username, code)
     r = redis
     s = r.get("#{username}_#{code}")
-    if !s.nil?
-      s.to_f
-    else
-      s
-    end
+    s&.to_f
   end
 
   def to_json(*options)
