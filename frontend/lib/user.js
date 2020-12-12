@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
-import { API, DEFAULT_TIMEOUT, sieve } from './api';
-import { ResponseError, StatusError } from './error';
+import {writable} from 'svelte/store';
+import {API, DEFAULT_TIMEOUT, sieve} from './api';
+import {ResponseError} from './error';
 import Stock from './stock';
 import timeout from './timeout';
 

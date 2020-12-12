@@ -1,7 +1,6 @@
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-// import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import dev from 'rollup-plugin-dev'
 
@@ -28,9 +27,7 @@ export default {
 		smelte({
 			purge: production,
 			output: "public/build/global.css",
-			postcss: [], // Your PostCSS plugins
-			whitelist: [], // Array of classnames whitelisted from purging
-			whitelistPatterns: [], // Same as above, but list of regexes
+			whitelistPatterns: [],
 			tailwind: {
 				theme: {
 					extend: {
@@ -61,7 +58,7 @@ export default {
 
 		!production && dev({
 			dirs: ['public'],
-			proxy: { '/api/*': 'localhost:4567' },
+			proxy: { '/api/*': 'http://localhost:4567' },
 			spa: 'public/index.html',
 			port: 3000
 		}),
