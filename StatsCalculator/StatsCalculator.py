@@ -78,7 +78,7 @@ def save_to_redis(user, stock_code, the_stat):
 def respond_by_socket(address, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((address, int(port)))  # use address variable!
-        s.sendall(b'Stat calculated and saved')
+        s.sendall(b'1')
         data = s.recv(1024)
     print('Received', repr(data))
 
