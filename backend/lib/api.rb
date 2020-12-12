@@ -166,7 +166,7 @@ error InvalidCredentialsError do
     {
       success: false,
       reason: "username of password incorrect"
-    }
+    }.to_json
   ]
 end
 
@@ -176,7 +176,7 @@ error UserExistsError do
     {
       success: false,
       reason: "user exists"
-    }
+    }.to_json
   ]
 end
 
