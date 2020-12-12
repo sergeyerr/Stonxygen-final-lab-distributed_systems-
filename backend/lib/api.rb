@@ -98,7 +98,7 @@ get "/api/user/info" do
       user: u
     }.to_json
   else
-    403
+    raise BadTokenError
   end
 end
 
