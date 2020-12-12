@@ -2,16 +2,18 @@ require "redis"
 require "error"
 require "env"
 
-if Env::REDIS == "localhost"
-  REDIS = Redis.new(host: Env::REDIS, port: 6379)
-else
-  SENTINELS = [{host: Env::REDIS_SENTINEL, port: 26379}]
-  REDIS = Redis.new(
-    host: Env::REDIS,
-    password: "redis",
-    sentinels: SENTINELS,
-    role: :slave
-  )
+def redis
+  if Env::REDIS == "localhost"
+    Redis.new(host: Env::REDIS, port: 6379)
+  else
+    sentinels = [{host: Env::REDIS_SENTINEL, port: 26379}]
+    Redis.new(
+      host: Env::REDIS,
+      password: "redis",
+      sentinels: sentinels,
+      role: :slave
+    )
+  end
 end
 
 class Stock
@@ -24,7 +26,8 @@ class Stock
   attr_reader :code
 
   def self.all_available
-    results = REDIS.hscan("Stocks", 0)
+    r = redis
+    results = r.hscan("Stocks", 0)
     stocks = results[1]
     organizations = stocks.map { |s| s[1] }
     codes = stocks.map { |s| s[0] }
@@ -34,14 +37,16 @@ class Stock
   end
 
   def self.with_codes(codes)
-    organizations = REDIS.hmget("Stocks", *codes)
+    r = redis
+    organizations = r.hmget("Stocks", *codes)
     prices = self.prices(codes)
 
     stocks(codes, prices, organizations)
   end
 
   def self.statistic(username, code)
-    s = REDIS.get("#{username}_#{code}")
+    r = redis
+    s = r.get("#{username}_#{code}")
     if !s.nil?
       s.to_f
     else
@@ -62,7 +67,8 @@ class Stock
       return []
     end
 
-    prices = REDIS.mget(*codes)
+    r = redis
+    prices = r.mget(*codes)
     if prices.any? { |p| p.nil? }
       raise DataError.new("Some stocks prices are unavailable")
     end

@@ -5,6 +5,8 @@ require "user"
 require "error"
 require "statistic"
 
+set :show_exceptions, true if development?
+
 configure do
   set :protection, except: [:json_csrf]
 end
@@ -159,7 +161,6 @@ get "/api/stock/statistic" do
     403
   end
 end
-
 
 error InvalidCredentialsError do
   [
