@@ -37,6 +37,7 @@ services:
      - RABBITMQ=rabbit
      - AUTH_SERVICE=auth
      - USER_SERVICE=user_service
+     - SOCKET_TIMEOUT=5
   finance_api:
     image: sergeyer/trrp_finance_api:latest
     networks:
@@ -52,7 +53,7 @@ services:
      - services_network
      - redis_network
     environment:
-     - UPDATE_FREQUENCY=60
+     - UPDATE_FREQUENCY=30
      - FINANCE_API=finance_api
     depends_on:
      - redis
