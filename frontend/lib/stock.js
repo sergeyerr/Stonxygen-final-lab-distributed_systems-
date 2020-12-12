@@ -6,9 +6,11 @@ export default class Stock {
         this.code = code;
         this.price = price;
         this.organization = organization;
+        this.statisticValue = "?"
     }
 
     static allAvailable() {
+        console.debug('Fetching all available stocks...');
         return timeout(DEFAULT_TIMEOUT, sieve(fetch(API + '/stock/list')))
             .then(response => response.stocks)
             .then(stocks =>
@@ -17,8 +19,11 @@ export default class Stock {
     }
 
     async statistic() {
-        timeout(DEFAULT_TIMEOUT, sieve(
+        console.debug(`Fetching statistic for ${this.code}`);
+        this.statisticPromise = sieve(timeout(DEFAULT_TIMEOUT, 
             fetch(API + `/stock/statistic?code=${this.code}`)
         ))
+
+        return this.statisticPromise;
     }
 }

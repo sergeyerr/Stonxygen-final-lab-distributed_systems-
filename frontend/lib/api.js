@@ -7,24 +7,23 @@ export const API = new URL(document.URL).origin + '/api';
 export function sieve(fetchPromise) {
     return fetchPromise
         .then(response => {
-            const contentType = response.headers.get('content-type')
-            if (!contentType.includes('application/json')) {
-                console.log(contentType);
-                throw new APIError('Content Mismatch');
-            }
+            console.debug('Fetch successful...');
+            const contentType = response.headers.get('content-type');
+            console.debug(`Content-Type received: ${contentType}`);
 
             if (!response.ok) {
+                console.debug(`Response status code was ${response.status}`)
                 throw new StatusError(
                     'Server returned error status',
                     response.status
                 );
             }
+            console.debug('Response passed safety checks...');
 
             return response;
         })
         .then(response => response.json())
         .then(body => {
-            console.log(body);
             if (body.success === false) {
                 throw new ResponseError(body.reason);
             }

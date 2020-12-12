@@ -1,6 +1,8 @@
 <script>
     import { links } from 'svelte-routing';
     import { user } from '../lib/user.js';
+
+    console.debug('App started!');
 </script>
 
 <div class="flex px-8 items-center">

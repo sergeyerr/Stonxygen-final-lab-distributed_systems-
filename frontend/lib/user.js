@@ -24,6 +24,7 @@ export class User {
     }
 
     async buyStock(stock) {
+        console.debug(`${user.name} buys ${stock.code}`);
         return timeout(
             DEFAULT_TIMEOUT,
             sieve(
@@ -44,6 +45,7 @@ export class User {
     }
 
     async sellStock(stock) {
+        console.debug(`${user.name} sells ${stock.code}`);
         return timeout(
             DEFAULT_TIMEOUT,
             sieve(
@@ -64,6 +66,7 @@ export class User {
     }
 
     static async signup(name, password) {
+        console.debug(`Signing up ${user}`);
         return sieve(fetch(API + '/user/signup', {
             method: 'POST',
             body: JSON.stringify({
