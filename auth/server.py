@@ -47,7 +47,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
         user = res[0]
         left_time = res[1]
         if left_time.seconds < tokens_lifetime_sec:
-            return auth_pb2.OkAnswer(user=user)
+            return auth_pb2.UserAnswer(user=user)
         context.set_details("token outdated")
         context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
         return auth_pb2.UserAnswer()
