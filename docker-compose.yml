@@ -53,7 +53,7 @@ services:
      - services_network
      - redis_network
     environment:
-     - UPDATE_FREQUENCY=30
+     - UPDATE_FREQUENCY=5
      - FINANCE_API=finance_api
     depends_on:
      - redis
