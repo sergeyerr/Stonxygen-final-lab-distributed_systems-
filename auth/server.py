@@ -13,6 +13,11 @@ import auth_pb2_grpc
 host = getenv('POSTGRES_CONNECTION', 'localhost')
 tokens_lifetime_sec = int(getenv('TOKEN_LIFETIME', 300))
 
+import logging
+import sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
 
 def find_hash(s):
     hashlib.md5(str(s).encode('utf-8')).hexdigest()
@@ -24,6 +29,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
         cursor = conn.cursor()
         passwd = find_hash(request.password)
         user = request.user
+        logging.debug(f'got user {request.user} with pass: {request.password}')
         cursor.execute(f"SELECT COUNT(*) FROM users WHERE nick='{user}' and hash='{passwd}'")
         if cursor.fetchone()[0] == 0:
             context.set_details('no user with such password')
@@ -72,6 +78,7 @@ class Auth_Servicer(auth_pb2_grpc.authServicer):
         conn = psycopg2.connect(host=host, dbname='stocks', user='postgres', password='postgres')
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = conn.cursor()
+        logging.debug(f'got user {request.user} with pass: {request.password}')
         passwd = find_hash(request.password)
         user = request.user
         cursor.execute(f"SELECT COUNT(*) FROM users WHERE nick='{user}'")

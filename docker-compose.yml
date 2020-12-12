@@ -9,13 +9,13 @@ networks:
   services_network:
     driver: overlay
 
-volumes:
-  pg_0_data:
-    driver: local
-  pg_1_data:
-    driver: local
-  pg_2_data:
-    driver: local
+#volumes:
+ # pg_0_data:
+   # driver: local
+ # pg_1_data:
+ #   driver: local
+ # pg_2_data:
+   # driver: local
     
 services:
   backend:
@@ -106,8 +106,8 @@ services:
   
   pg-0:
     image: bitnami/postgresql-repmgr:11
-    volumes:
-      - pg_0_data:/bitnami/postgresql
+  #  volumes:
+    #  - pg_0_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_POSTGRES_PASSWORD=postgres
       - POSTGRESQL_USERNAME=postgres
@@ -122,8 +122,8 @@ services:
       - postgres_network
   pg-1:
     image: bitnami/postgresql-repmgr:11
-    volumes:
-      - pg_1_data:/bitnami/postgresql
+  #  volumes:
+    #  - pg_1_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_POSTGRES_PASSWORD=postgres
       - POSTGRESQL_USERNAME=postgres
@@ -138,8 +138,8 @@ services:
       - postgres_network
   pg-2:
     image: bitnami/postgresql-repmgr:11
-    volumes:
-      - pg_2_data:/bitnami/postgresql
+   # volumes:
+   #   - pg_2_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_POSTGRES_PASSWORD=postgres
       - POSTGRESQL_USERNAME=postgres
