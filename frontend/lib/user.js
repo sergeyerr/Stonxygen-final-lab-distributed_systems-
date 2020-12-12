@@ -28,7 +28,7 @@ export class User {
         return sieve(timeout(
             DEFAULT_TIMEOUT,
             fetch(
-                API + `/stock/buy?code="${stock.code}"`,
+                API + `/stock/buy?code=${stock.code}`,
                 { method: "POST" }
             )))
                 .then(response => {
@@ -49,7 +49,7 @@ export class User {
         return sieve(timeout(
             DEFAULT_TIMEOUT,
             fetch(
-                API + `/stock/sell?code="${stock.code}"`,
+                API + `/stock/sell?code=${stock.code}`,
                 { method: "POST" }
             )))
                 .then(response => {

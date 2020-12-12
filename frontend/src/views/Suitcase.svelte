@@ -2,7 +2,6 @@
     import { link, navigate } from "svelte-routing";
     import Card from "smelte/src/components/Card";
     import Button from "smelte/src/components/Button";
-    import ProgressCircular from 'smelte/src/components/ProgressCircular';
     import Snackbar from "smelte/src/components/Snackbar";
     import { flip } from 'svelte/animate';
     import { onMount } from "svelte";
@@ -24,16 +23,19 @@
     }
 
     function fetchStatistic(item) {
-        $knownStatistics[item.code] = '...';
-        item.statistic()
-            .then(response => {
-                $knownStatistics[item.code] = response.statistic;
-            })
-            .catch(e => {
-                $knownStatistics[item.code] = '?';
-                error = e;
-                showErrorMessage = true;
-            })
+        if ($knownStatistics[item.code] != '...') {
+            $knownStatistics[item.code] = '...';
+            item.statistic()
+                .then(response => {
+                    s = parseFloat(response.statistic).toFixed(2)
+                    $knownStatistics[item.code] = s;
+                })
+                .catch(e => {
+                    $knownStatistics[item.code] = '?';
+                    error = e;
+                    showErrorMessage = true;
+                })
+        }
     }
 
     $: sortedStocks = (stocks =>

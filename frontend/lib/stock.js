@@ -2,9 +2,9 @@ import { API, DEFAULT_TIMEOUT, sieve } from './api';
 import timeout from './timeout';
 
 export default class Stock {
-    constructor(code, price, organization, statistic) {
+    constructor(code, price, organization) {
         this.code = code;
-        this.price = price;
+        this.price = parseFloat(price).toFixed(2);
         this.organization = organization;
     }
 
