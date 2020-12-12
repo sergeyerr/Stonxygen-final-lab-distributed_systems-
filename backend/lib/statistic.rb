@@ -6,11 +6,19 @@ require "socket"
 require "timeout"
 require "logs"
 
-CONN = Bunny.new("amqp://rabbit:rabbit@#{Env::RABBITMQ}:5672")
-CONN.start
+if Env::HOSTNAME == "localhost"
+  RABBIT_USER = "guest"
+  RABBIT_PASSWORD = "guest"
+else
+  RABBIT_USER = "rabbit"
+  RABBIT_PASSWORD = "rabbit"
+end
+
+CONN = Bunny.new("amqp://#{RABBIT_USER}:#{RABBIT_PASSWORD}@#{Env::RABBITMQ}:5672")
 
 class StatRequest
   def initialize(username, code)
+    CONN.start
     @channel = CONN.create_channel
     @exchange = @channel.default_exchange
     @username = username
