@@ -31,7 +31,7 @@
     }
 </script>
 
-<Snackbar color="alert" top value={showError}>
+<Snackbar color="alert" top bind:value={showError}>
     {#if error != null}
         <p>
             {error.message}
