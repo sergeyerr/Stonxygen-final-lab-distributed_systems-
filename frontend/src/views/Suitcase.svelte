@@ -88,14 +88,14 @@
     {:else}
         <div class="flex flex-wrap mx-32 justify-center my-auto">
             {#each sortedStocks as item (item.code)}
-                <div animate:flip={{duration: 300}} on:mouseenter={fetchStatistic(item)}>
+                <div animate:flip={{duration: 300}}>
                     <Card.Card class="mb-4 mr-4">
                         <div slot="title">
                             <Card.Title title={item.code} subheader={item.organization}/>
                         </div>
                         <div slot="text" class="px-4 pb-0 pt-0 text-right">
                             <span class="mr-8">${item.price}</span>
-                            <span>VAR
+                            <span>Week CAPM
                                 {#if $knownStatistics[item.code] == null}
                                     ?
                                 {:else}
@@ -105,6 +105,9 @@
                         </div>
                         <div slot="actions" class="flex justify-center">
                             <div class="p-2">
+                                <Button text on:click={fetchStatistic(item)}>
+                                    Recalculate
+                                </Button>
                                 <Button
                                     text
                                     on:click={sellStock(item)}
