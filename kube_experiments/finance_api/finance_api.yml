@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: finance-api
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: finance-api-config
+  namespace: finance-api
+data:
+  userService: user-service-grpc.user-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-api-deployment
+  namespace: finance-api
+  labels:
+    app: finance-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance-api
+  template:
+    metadata:
+      labels:
+        app: finance-api
+    spec:
+      containers:
+      - name: finance-api-container
+        image: sergeyer/trrp_finance_api
+        ports:
+        - containerPort: 50051
+        env:
+        - name: USER_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: finance-api-config
+              key: userService
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: finance-api
+  name: finance-api-grpc
+spec:
+  selector:
+    app: finance-api
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
+ 
