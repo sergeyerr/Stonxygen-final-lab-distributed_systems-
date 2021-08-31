@@ -1,21 +1,8 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: finance-api
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: finance-api-config
-  namespace: finance-api
-data:
-  userService: user-service-grpc.user-service
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: finance-api-deployment
-  namespace: finance-api
+  namespace: finance-services
   labels:
     app: finance-api-deployment
 spec:
@@ -37,14 +24,14 @@ spec:
         - name: USER_SERVICE
           valueFrom:
             configMapKeyRef:
-              name: finance-api-config
+              name: finance-config
               key: userService
               
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: finance-api
+  namespace: finance-services
   name: finance-api-grpc
 spec:
   selector:
