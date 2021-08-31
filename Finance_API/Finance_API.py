@@ -12,21 +12,21 @@ from os import getenv
 
 user_service_host = getenv('USER_SERVICE', 'localhost')
 
+#comment to forse rebuild
+stock_names = [('Apple Inc.', 'AAPL'),
+               ('Microsoft Corporation', 'MSFT'),
+               ('Amazon.com, Inc.', 'AMZN'),
+               ('Alphabet Inc.', 'GOOG'),
+               ('Facebook, Inc.', 'FB'),
+               ('Alibaba Group Holding Limited', 'BABA'),
+               ('Tesla, Inc.', 'TSLA'),
+               ('NVIDIA Corporation', 'NVDA'),
+               ('PayPal Holdings, Inc.', 'PYPL'),
+               ('Salesforce.com Inc', 'CRM'),
+               ('Intel Corporation', 'INTC'),
+               ('Advanced Micro Devices, Inc.', 'AMD')]
 
-# stock_names = [('Apple Inc.', 'AAPL'),
-#                ('Microsoft Corporation', 'MSFT'),
-#                ('Amazon.com, Inc.', 'AMZN'),
-#                ('Alphabet Inc.', 'GOOG'),
-#                ('Facebook, Inc.', 'FB'),
-#                ('Alibaba Group Holding Limited', 'BABA'),
-#                ('Tesla, Inc.', 'TSLA'),
-#                ('NVIDIA Corporation', 'NVDA'),
-#                ('PayPal Holdings, Inc.', 'PYPL'),
-#                ('Salesforce.com Inc', 'CRM'),
-#                ('Intel Corporation', 'INTC'),
-#                ('Advanced Micro Devices, Inc.', 'AMD')]
-
-stock_names = []
+#stock_names = []
 
 
 class StocksLoaderServicer(Finance_API_pb2_grpc.StocksLoaderServicer):
@@ -43,6 +43,7 @@ class StocksLoaderServicer(Finance_API_pb2_grpc.StocksLoaderServicer):
         stock_codes = request.codes.split()
         tickers = yf.Tickers(stock_codes)
         for idx, ticker in enumerate(tickers.tickers):
+        #error is here, ticker is str
             data = ticker.history(period='5d')
             hist = data['Close'].tolist()
             yield Finance_API_pb2.Stock(name='', code=stock_codes[idx], price=hist)

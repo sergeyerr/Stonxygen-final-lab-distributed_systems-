@@ -8,12 +8,15 @@ from redis.sentinel import Sentinel
 
 update_frequency = getenv('UPDATE_FREQUENCY', '20')
 finance_api_host = getenv('FINANCE_API', 'localhost')
+sentinel_conn = getenv('SENTINEL_ADRESS', None)
+master_conn = getenv('REDIS_MASTER_CONN', None)
+slave_conn = getenv('REDIS_SLAVE_CONN', None)
 
 redis_conn = redis.Redis()
-
-if finance_api_host == 'localhost':
-    redis_conn = redis.Redis()
-else:
+if master_conn:
+    redis_conn = redis.Redis(host=master_conn)
+elif sentinel_conn:
+# if you will test this setup, fix config
     sentinel = Sentinel([('redis-sentinel', '26379')], socket_timeout=0.1)
     redis_conn = sentinel.master_for('mymaster', socket_timeout=0.1, password='redis')
 

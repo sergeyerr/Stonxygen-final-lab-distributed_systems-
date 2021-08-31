@@ -5,6 +5,6 @@ metadata:
   namespace: finance-services
 data:
   userService: user-service-grpc.db-services
-  priceUpdateFrequency: 5
+  priceUpdateFrequency: "5"
   financeApiAdress: finance-api-grpc
-  
+  redisMasterAdress: redis-master.redis-cluster

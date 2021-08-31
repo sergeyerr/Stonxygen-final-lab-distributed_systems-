@@ -1,31 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: finance-api-deployment
+  name: price-updater-deployment
   namespace: finance-services
   labels:
-    app: finance-api-deployment
+    app: price-updater-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: finance-api
+      app: price-updater
   template:
     metadata:
       labels:
-        app: finance-api
+        app: price-updater
     spec:
       containers:
-      - name: finance-api-container
-        image: sergeyer/trrp_finance_api:latest
-        ports:
-        - containerPort: 50051
+      - name: price-updater-container
+        image: sergeyer/trrp_price_updater:latest
         env:
-        - name: USER_SERVICE
+        - name: FINANCE_API
           valueFrom:
             configMapKeyRef:
               name: finance-config
-              key: userService
+              key: financeApiAdress
         - name: UPDATE_FREQUENCY
           valueFrom:
             configMapKeyRef:
@@ -36,18 +34,4 @@ spec:
             configMapKeyRef:
               name: finance-config
               key: redisMasterAdress
-              
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: finance-services
-  name: finance-api-grpc
-spec:
-  selector:
-    app: finance-api
-  ports:
-    - protocol: TCP
-      port: 50051
-      targetPort: 50051
  
